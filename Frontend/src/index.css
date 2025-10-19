@@ -22,3 +22,9 @@ a.active{
     
   }
 }
+input{
+ /* box-shadow: inset 5px 5px 10px #011f4b ,inset -5px -5px 10px #3f6aa9; */
+ box-shadow: inset 5px 5px 10px #b8bcc2 ,inset -5px -5px 10px #ffffff
+
+/* shadow-[inset_5px_5px_10px_#,inset_-5px_-5px_10px_] */
+}

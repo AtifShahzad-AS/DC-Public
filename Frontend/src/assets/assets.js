@@ -12,9 +12,18 @@ import diamond  from './diamond.png'
 import dropdown from './dropdown_icon.png'
 import star_icon from './star_icon.png'
 import star_dull_icon from './star_dull_icon.png'
+import b10 from './b10.jpeg'
+import uploadarea from './upload_area.svg'
+import bglog from './bglog.jpg'
+import log1 from './F.png'
+import log from './f1.png'
 
 
 export const assets ={
+   log,
+    bglog,
+    b10,
+    uploadarea,
     logo,
     arrow,
     arrow_icon,

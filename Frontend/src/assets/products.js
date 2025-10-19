@@ -34,80 +34,101 @@ import p33_img from "./product_33.png";
 import p34_img from "./product_34.png";
 import p35_img from "./product_35.png";
 import p36_img from "./product_36.png";
+import bed3 from './bed3.jpeg'
+import be1 from './be1.jpeg'
+import b2 from './b222.jpg'
+import be2 from './be2.jpeg'
+import be3 from './be3.jpeg'
+import be4 from './be4.jpeg'
+import b6 from './b6.jpeg'
+import b7 from './b7.jpeg'
+import b8 from './b8.jpeg'
+import b9 from './b9.jpeg'
+import b10 from './b10.jpeg'
+import b11 from './b11.jpeg'
 
 let products = [
   {
     _id: '1',
-    name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse",
-    image: [p1_img,p20_img,p31_img,p21_img],
+    name: "Machine Washable Bedding Set",
+    // image: [p1_img,p20_img,p31_img,p21_img],
+    image:[b10],
    description: "lorem1 s ssd    ssdd    sewwswd  wewwe",
-    price: 50.0,
+    price: 500.0,
     size:["m","l","xl","xxl"],
-   bestseller:true
+  //  bestseller:true
   },
   {
     _id: '2',
-    name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse",
+    name: "Machine Washable Bedding Set",
     category: "women",
-    image: [p2_img],
-    price: 85.0,
+    image: [be2],
+    price: 850.0,
     size:["m","l","xl","xxl"],
 
-   bestseller:true
+  //  bestseller:true
 
    
   },
   {
     _id: '3',
-    name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse",
+    name: "SMachine Washable Bedding Set",
     category: "women",
-    image: [p3_img],
-   price: 60.0,
-      //  bestseller:true
+    // image: [p3_img], 
+     image:[b2],
+   price: 600.0,
+    //  bestseller:true
 
   },
   {
     _id:'4 ' ,
-    name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse",
+    name: "Striped Machine Washable Bedding Set",
     category: "women",
-    image: p4_img,
-    new_price: 100.0,
-       bestseller:true
+    // image: p4_img,
+     image:[b7],
+    price: 1000.0,
+      //  bestseller:true
 
   },
   {
     _id:' 5',
-    name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse",
+    name: "Machine Washable Bedding Set Blouse",
     category: "women",
-    image: p5_img,
-    new_price: 85.0,
+    // image: p5_img,
+     image:[be1],
+   price: 950.0,
        bestseller:true
 
   },
   {
     _id:' 6',
-    name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse",
+    name: " Flutter Machine Washable Bedding Set",
     category: "women",
-    image: p6_img,
-    new_price: 85.0,
+    // image: p6_img, 
+     image:[b6],
+    price: 850.0,
        bestseller:true
 
   },
   {
     id: '7',
-    name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse",
+    name: "Machine Washable Bedding Set",
     category: "women",
-    image: p7_img,
-    new_price: 85.0,
+    image: b9,
+    price: 850.0,
     old_price: 120.5,
+       bestseller:true
+
   },
   {
     id: '8',
-    name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse",
+    name: "Machine Washable Bedding Set",
     category: "women",
-    image: p8_img,
-    new_price: 85.0,
+    image: b8,
+   price: 850.0,
     old_price: 120.5,
+       bestseller:true
+
   },
   {
     id: '9',

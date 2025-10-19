@@ -10,7 +10,7 @@ const Productitems = ({id,image,name,price}) => {
      <img className='rounded-2xl hover:' src={image} alt="img" />
     </motion.div> */}
      <div className="relative overflow-hidden rounded-2xl transition-transform duration-700 hover:scale-110 hover:rotate-1 hover:translate-x-1">
-      <img className="w-full rounded-2xl" src={image} alt="img" />
+      <img className="w-full h-auto rounded-2xl" src={image} alt="img" />
 
       {/* Overlay */}
       <div

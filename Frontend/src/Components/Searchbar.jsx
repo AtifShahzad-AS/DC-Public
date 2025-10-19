@@ -16,7 +16,7 @@ const Searchbar = () => {
     }
   }, [location])
   return visible && showsearch ? (
-    <div className='border-t border-b bg-gray-50 text-center'>
+    <div className='border-t border-b bg-gray-50 text-center mt-20'>
       <div className='inline-flex items-center justify-center border border-gray-400 my-3 mx-3 px-5 py-3 rounded-full w-3/4 sm:w-1/2'>
         <input value={search} onChange={(e) => setsearch(e.target.value)} type="text" placeholder='Search..' className='flex-1 bg-inherit outline-none text-sm' />
         <FaSearch className="text-black cursor-pointer text-2xl" /></div>
