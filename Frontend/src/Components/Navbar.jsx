@@ -9,14 +9,30 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [drop, setdrop] = useState(false)
 
-  const {token,settoken,getcartcount,setshowsearch,navigate}=useContext(ShopContext);
-  const logout=()=>{
-    navigate('/login')
-    localStorage.removeItem('token')
-    settoken('')
-      // setcartitems({})
-    
-  }
+  const {token,settoken,getcartcount,setshowsearch,navigate,setcartitems}=useContext(ShopContext);
+  // const logout=()=>{
+  //   localStorage.removeItem('token')
+  //   settoken('')
+
+  //    setcartitems({}) // clear cart 
+  // navigate('/'); 
+
+  // toast.success("Logged out successfully");
+  // }
+  const logout = () => {
+  console.log("logout() called");
+  localStorage.removeItem("token");
+  console.log("removed token from localStorage");
+  settoken("");
+  console.log("settoken('') called");
+  setcartitems({});
+  console.log("setcartitems({}) called");
+  toast.success("Logged out");
+  console.log("toast shown");
+  navigate("/", { replace: true });
+  console.log("navigate called");
+};
+
   return (
     <>
       {/* Top Navbar */}
@@ -24,15 +40,40 @@ const Navbar = () => {
         
         {/* Logo */}
         {/* <h4  className='font-bold text-medium sm:text-2xl md:text-3xl lg:text-4xl'>Diamond Collection</h4> */}
-         <img className='w-12 sm:w-15 md:17 lg:w-20' src={assets.log} alt="" />
+         <img className='w-12 sm:w-15 md:17 lg:w-20 ' src={assets.glogo} alt="" />
           {/* <img src={assets.logo} className='mb-5 w-32' alt="" /> */}
 
         {/* Nav Links (Desktop only) */}
-        <ul className='hidden  sm:flex sm:gap-7 md:gap-10   text-black border-gray-400  px-7 py-4 text-2xl font-medium  backdrop-blur-lg rounded-full '>
-          <NavLink to='/' className="hover:text-blue-600  border-b-2 border-transparent  hover:border-b-blue-600">Home</NavLink>
-          <NavLink to='/collection' className="hover:text-blue-600 border-b-2 border-transparent  hover:border-b-blue-600 ">Collection</NavLink>
-          <NavLink to='/contact' className="hover:text-blue-600 border-b-2 border-transparent  hover:border-b-blue-600">Contact</NavLink>
-          <NavLink to='/about' className="hover:text-blue-600 border-b-2 border-transparent  hover:border-b-blue-600">About</NavLink>
+        <ul className='hidden  sm:flex sm:gap-7 md:gap-10   text-black border-gray-400  px-7 py-4 text-lg font-medium xl:text-xl xl:gap-20  backdrop-blur-lg rounded-full '>
+           <NavLink to="/" className={({ isActive }) =>  isActive
+      ? "text-blue-600 border-b-2 border-b-blue-600  "
+      : "hover:text-blue-600 border-b-2 border-transparent  hover:border-b-blue-600"
+  }
+>
+  Home
+</NavLink>
+  <NavLink to="/collection" className={({ isActive }) =>  isActive
+      ? "text-blue-600 border-b-2 border-b-blue-600  "
+      : "hover:text-blue-600 border-b-2 border-transparent  hover:border-b-blue-600"
+  }
+>
+  Collection
+</NavLink>
+  <NavLink to="/contact" className={({ isActive }) =>  isActive
+      ? "text-blue-600 border-b-2 border-b-blue-600  "
+      : "hover:text-blue-600 border-b-2 border-transparent  hover:border-b-blue-600"
+  }
+>
+  Contact
+</NavLink>
+  <NavLink to="/about" className={({ isActive }) =>  isActive
+      ? "text-blue-600 border-b-2 border-b-blue-600  "
+      : "hover:text-blue-600 border-b-2 border-transparent  hover:border-b-blue-600"
+  }
+>
+  About
+</NavLink>
+
         </ul>
 
         {/* Icons  */}

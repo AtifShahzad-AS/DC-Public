@@ -3,23 +3,35 @@ import { useParams } from 'react-router-dom'
 import { ShopContext } from '../../Context/Shopcontext';
 import { assets } from '../assets/assets';
 import Relatedproduct from '../Components/Relatedproduct';
-
+import { backendurl } from '../../../Admin/src/App';
+import axios from "axios"
 const Product = () => {
   const { productid } = useParams();
   const { products,currency,addtocart } = useContext(ShopContext);
   const [productdata, setproductdata] = useState(false);
   const [image, setimage] = useState("");
   const [size,setsize]=useState('');
+
   const fetchproductdata = async () => {
-    products.map((item) => {
-      if (item._id === productid) {
-        setproductdata(item);
-        setimage(item.image[0])
-        // console.log(item);
-        return null;
-      }
-    })
+  try {
+    const response = await axios.post(backendurl + "/api/product/single", {
+      productid
+    });
+
+    if (response.data.success) {
+      setproductdata(response.data.product);
+      setimage(response.data.product.image[0]);
+      //  console.log("PRODUCT DATA:", response.data.product);  // 
+    }
+  } catch (error) {
+    console.log(error);
   }
+};
+
+
+
+  
+
   useEffect(() => {
     fetchproductdata();
   }, [productid])
@@ -62,7 +74,7 @@ const Product = () => {
 <div className='flex flex-col gap-4 my-8'>
   <p className='font-bold'>Select size</p>
   <div className='flex gap-2'>
-    {productdata.size.map((item,index)=>{
+    {productdata?.sizes?.map((item,index)=>{
 return   <button onClick={()=>(setsize(item))} className={`border py-2 px-4   bg-gray-100 ${item===size ? 'border-orange-500' : ''} `} key={index}> {item}</button>
   })}</div>
 </div>

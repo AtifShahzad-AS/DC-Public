@@ -14,7 +14,7 @@ const Bestseller = () => {
    });
    setbestseller(bestproduct.slice(0,4))
 
-    },[])
+    },[products])
   return (
      <div className='my-10'>
         <div className='text-center py-8 text-3xl'>

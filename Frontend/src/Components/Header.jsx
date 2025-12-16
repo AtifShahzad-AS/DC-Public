@@ -9,11 +9,11 @@ const Header = () => {
         <div className=' text-[#414141]'>
             <div className='flex items-center gap-2'>
                 <p className='w-8 md:w-11 h-[2px] bg-[#414141]'></p>
-                <p className='font-medium text-sm md:text-base'>Our Best Seller</p>
+                <p className='font-medium text-sm md:text-base'>Discover Luxury Essentials</p>
             </div>
-            <h1 className=' text-3xl sm:py-3 lg:text-5xl leading-relaxed text-red-400'>Latest Arrivals</h1>
+            <h1 className=' text-3xl sm:py-3 lg:text-5xl leading-relaxed text-blue-500'>Latest Arrivals</h1>
             <div className='flex items-center gap-2'>
-                <p className='font-semibold text-sm md:text-base'>Shop now</p>
+                <p className='font-semibold text-sm md:text-base'>Upgrade Your Everyday Living</p>
                 {/* <h1 className="text-5xl font-extrabold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 bg-clip-text text-transparent">
         DEVELOPER
       </h1> */}
@@ -24,7 +24,7 @@ const Header = () => {
 
         </div>
       {/* right side */}
-      <motion.img   className='w-full sm:w-1/2' src="pilow.png" alt="img" />
+      <motion.img   className='w-full sm:w-1/2' src={assets.h1bed} alt="img b" />
     </div>
   )
 }

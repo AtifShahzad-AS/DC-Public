@@ -5,6 +5,9 @@ import connectdb from "./config/mongodb.js";
 import connectcloud from "./config/cloudinary.js";
 import userrouter from "./routes/userroute.js";
 import productrouter from "./routes/productroute.js";
+import cartrouter from "./routes/cartroute.js";
+import orderrouter from "./routes/orderroutes.js";
+import googleAuthRoute from "./routes/googleAuthRoute.js";
 
 
 // appconfig
@@ -20,7 +23,9 @@ app.use(cors())
 //api endpoints
 app.use('/api/user',userrouter);
 app.use('/api/product',productrouter)
-
+app.use('/api/cart',cartrouter)
+app.use('/api/order',orderrouter)
+app.use('/api/auth', googleAuthRoute);
 
 app.get('/',(req,res)=>{
     res.send('api working')

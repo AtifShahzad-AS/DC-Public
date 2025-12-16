@@ -7,9 +7,11 @@ import { FaTrash } from 'react-icons/fa';
 import Carttotal from '../Components/Carttotal';
 
 const Cart = () => {
+
   const {products,currency,cartitems,updatequantity,navigate}=useContext(ShopContext);
   const [cartdata,setcartdata]=useState([]);
   useEffect(()=>{
+    if(products.length > 0){
  const tempdata=[];
  for(const items in cartitems){
   for(const item in cartitems[items]){
@@ -20,10 +22,11 @@ const Cart = () => {
         quantity:cartitems[items][item]
       })
     }
+    }
   }
- }
  setcartdata(tempdata)
-  },[cartitems])
+ }
+  },[cartitems,products])
   return (
    <div className='px-4 sm:px[5vw] md:px-[7vw] lg:px-[9vw] mt-20'>
     <div className='border-t pt-14'>

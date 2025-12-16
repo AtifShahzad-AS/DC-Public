@@ -41,14 +41,28 @@ const registeruser= async (req,res)=>{
     return    res.json({success:false,message:"user already exist"})
     }
     // validation
+     const nameRegex = /^[A-Za-z\s]+$/;
+  if (!nameRegex.test(name)) {
+    return res.json({ success: false, message: "Name must contain only letters" });
+  }
     if(!validator.isEmail(email)){
            return    res.json({success:false,message:"Enter valid emsil"})
 
     }
-    if(password.length < 4){
-           return    res.json({success:false,message:"Please enter strong password "})
+    const strongPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
 
-    }
+if (!strongPassword.test(password)) {
+  return res.json({
+    success: false,
+    message: "Password must include letters, numbers & a special character,min 6"
+  });
+}
+
+
+    // if(password.length < 4 ){
+    //        return    res.json({success:false,message:"Please enter strong password "})
+
+    // }
     const salt=await bcrypt.genSalt(10)
     const hashedpassword= await bcrypt.hash(password,salt)
 

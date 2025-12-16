@@ -2,6 +2,7 @@ import React from 'react'
 import { assets } from '../assets/assets'
 import { useState } from 'react'
 import axios from 'axios'
+import {toast} from 'react-toastify'
 import { backendurl } from '../App'
 const Add = ({token}) => {
   const [image1,setimage1]= useState(false);
@@ -38,6 +39,19 @@ const Add = ({token}) => {
 
     const response= await axios.post(backendurl +'/api/product/add',formdata,{headers:{token}})
     console.log(response.data)
+    if(response.data.success){
+      toast.success(response.data.message)
+      setname('')
+      setdesc('')
+      setimage1(false)
+      setimage2(false)
+      setimage3(false)
+      setimage4(false)
+      setprice('')
+    }
+    else{
+      toast.error(response.data.message)
+    }
    
    }
    catch(error){
@@ -80,19 +94,21 @@ const Add = ({token}) => {
       <div>
         <p className='mb-2'>Product Catagery</p>
         <select onChange={(e)=>setcategory(e.target.value)} value={category} className='w-full px-3 py-2'>
-          <option value="Bedsheets">BedSheets</option>
-          <option value="Blankets">Blankets</option>
-          <option  value="Pillows">Pillows</option>
+          <option value="Bedsheets">BedSheet</option>
+          <option  value="Pillows">Pillow</option>
+          <option value="Curtains">Curtain</option>
+          <option value="Quilts">Quilt</option>
+          <option value="Blankets">Blanket</option>
         </select>
       </div>
-      <div>
+      {/* <div>
         <p  className='mb-2'>Sub Catagery</p>
         <select onChange={(e)=>setsubcategory(e.target.value)} value={subcategory} className='w-full px-3 py-2'>
           <option value="Winter">Winter</option>
           <option value="Blankets">Blankets</option>
           <option  value="Pillows">Pillows</option>
         </select>
-      </div>
+      </div> */}
       <div>
         <p className='mb-2'>Product Price</p>
         <input onChange={(e)=>setprice(e.target.value)} value={price} className='px-3 py-2 w-full' type="number" placeholder='25' />
@@ -102,7 +118,7 @@ const Add = ({token}) => {
    <div>
   <p className="mb-2">Product Sizes</p>
   <div className="flex gap-3">
-    {["S", "M", "L", "XXL"].map((sz) => (
+    {["Single", "Double", "King Size"].map((sz) => (
       <div
         key={sz}
         onClick={() =>

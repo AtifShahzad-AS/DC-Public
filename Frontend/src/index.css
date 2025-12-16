@@ -19,10 +19,14 @@ a.active{
   background-color: black;
   color: white;
 }
+NavLink.active{
+  background-color: rgb(236, 14, 14);
+  color: white;
+}
     
   }
 }
-input{
+form input{
  /* box-shadow: inset 5px 5px 10px #011f4b ,inset -5px -5px 10px #3f6aa9; */
  box-shadow: inset 5px 5px 10px #b8bcc2 ,inset -5px -5px 10px #ffffff
 

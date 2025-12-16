@@ -5,6 +5,7 @@ import Footer from '../Components/Footer'
 import Bestseller from '../Components/Bestseller'
 import Ourpolicy from '../Components/Ourpolicy'
 import Catagories from './Catagories'
+import CategoryCard from '../Components/CategoryCard'
 
 
 const Home = () => {
@@ -17,7 +18,8 @@ const Home = () => {
         <div className='px-4  h-full sm:mb-10 '>
   
       
-     <Catagories/>
+     {/* <Catagories/> */}
+     <CategoryCard/>
       <Latestcollection/>
       <Bestseller/>
       <Ourpolicy/>

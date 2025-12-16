@@ -15,12 +15,25 @@ import star_dull_icon from './star_dull_icon.png'
 import b10 from './b10.jpeg'
 import uploadarea from './upload_area.svg'
 import bglog from './bglog.jpg'
-import log1 from './F.png'
+import slogo from './slogo.png'
+import plogo from './plogo.png'
+import clogo from './clogo.png'
 import log from './f1.png'
+import scover from './scover.png'
+import bedd from './bedd.jpeg'
+import h1bed from './hb.png'
+import b6 from './b6.jpeg'
+import glogo from './glogo2.png'
+
 
 
 export const assets ={
    log,
+   b6,
+   glogo,
+   h1bed,
+   bedd,
+   scover,
     bglog,
     b10,
     uploadarea,
@@ -29,6 +42,9 @@ export const assets ={
     arrow_icon,
     cart_icon,
     user,
+    slogo,
+    clogo,
+    plogo,
     search_icon,
     menu,
     favourite,

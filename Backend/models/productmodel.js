@@ -6,9 +6,9 @@ const productschema= new mongoose.Schema({
     image:{type:Array ,required:true},
     category:{type:String ,required:true},
     subcategory:{type:String ,required:true},
-    // sizes:{type:Array ,required:true},
+    sizes:{type:[String] ,required:true},
     bestseller:{type:Boolean },
-    date:{type:Date ,default:Date.now},
+    date:{type:Date ,default:Date.now()},
 
 })
 const productmodel= mongoose.models.product || mongoose.model('product',productschema);
