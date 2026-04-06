@@ -13,7 +13,11 @@ try {
   if(!token){
     return null
   }
-  const response =await axios.post(backendurl + '/api/order/userorders',{},{headers:{token}})
+  const response =await axios.post(backendurl + '/api/order/userorders',{},{
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+})
  if(response.data.success){
   let allorders=[]
   response.data.orders.map((order)=>{
@@ -51,8 +55,8 @@ try {
           <div>
             <p className='sm:text-base font-medium'>{item.name}</p>
             <div className='flex items-center gap-3 mt-1 text-base text-gray-500'>
-              <p >{currency}{item.price}</p>
               <p>Quantity: {item.quantity}</p>
+              <p >{currency}{item.price * item.quantity}</p>
               <p>Size: {item.size}</p>
             </div>
             

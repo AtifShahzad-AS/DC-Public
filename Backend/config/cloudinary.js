@@ -1,10 +1,20 @@
-import {v2 as cloudinary } from "cloudinary"
+// import {v2 as cloudinary } from "cloudinary"
 
-const connectcloud= async ()=>{
-cloudinary.config ({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key:process.env.CLOUDINARY_API_KEY,
-    api_secret:process.env.CLOUDINARY_SECRET_KEY
-})
-}
-export default connectcloud
+// const connectcloud= async ()=>{
+// cloudinary.config ({
+//     cloud_name: process.env.CLOUDINARY_NAME,
+//     api_key:process.env.CLOUDINARY_API_KEY,
+//     api_secret:process.env.CLOUDINARY_SECRET_KEY
+// })
+// }
+// export default connectcloud
+import { v2 as cloudinary } from "cloudinary";
+
+// configure Cloudinary immediately
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET_KEY,
+});
+
+export default cloudinary; // export the configured cloudinary instance

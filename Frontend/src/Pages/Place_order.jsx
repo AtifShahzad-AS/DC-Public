@@ -4,6 +4,7 @@ import Carttotal from '../Components/Carttotal'
 import { assets } from '../assets/assets'
 import { ShopContext } from '../../Context/Shopcontext'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const Place_order = () => {
   const [method,setmethod]=useState('cod');
@@ -29,30 +30,54 @@ const Place_order = () => {
   const onsubmit= async (event)=>{
    event.preventDefault()
    try {
-    let orderitems=[]
-    for(const items in cartitems){
-      for(const item in cartitems[items]){
-        if(cartitems[items][item] > 0){
-          const iteminfo= structuredClone(products.find(product => product._id===items))
-          if(iteminfo)
-{
-  iteminfo.size=item
-  iteminfo.quantity= cartitems[items][item]
-  orderitems.push(iteminfo)
-}        }
+//     let orderitems=[]
+//     for(const items in cartitems){
+//       for(const item in cartitems[items]){
+//         if(cartitems[items][item] > 0){
+//           const iteminfo= structuredClone(products.find(product => product._id===items))
+//           if(iteminfo)
+// {
+//   iteminfo.size=item
+//   iteminfo.quantity= cartitems[items][item]
+//   orderitems.push(iteminfo)
+// }        }
+//       }
+//     }
+// ── NEW ──
+let orderitems = []
+for (const items in cartitems) {
+  for (const item in cartitems[items]) {
+    if (cartitems[items][item] > 0) {
+      const product = products.find(product => product._id === items)
+      if (product) {
+        orderitems.push({
+          productId: product._id,   // ← explicit id for stock deduction
+          name:      product.name,
+          price:     product.price,
+          image:     product.image,
+          category:  product.category,
+          size:      item,
+          quantity:  cartitems[items][item],
+        })
       }
     }
+  }
+}
    let orderdata= {
     address:formdata,
     items:orderitems,
     amount:getcartamount() + delievery_fee
-
+   
    }
    switch(method){
     
     //api for cod
     case "cod":
-  const response= await axios.post(backendurl + '/api/order/place',orderdata,{headers:{token}})
+  const response= await axios.post(backendurl + '/api/order/place',orderdata,{
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+})
   if(response.data.success){
     setcartitems({})
     navigate('/orders')
@@ -64,7 +89,11 @@ const Place_order = () => {
 
        case "stripe":
         
-  const responsestripe= await axios.post(backendurl + '/api/order/stripe',orderdata,{headers:{token}})
+  const responsestripe= await axios.post(backendurl + '/api/order/stripe',orderdata,{
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+})
   // console.log(responsestripe.data)
   if(responsestripe.data.success){
     const {session_url}=responsestripe.data
@@ -73,32 +102,20 @@ const Place_order = () => {
     // navigate('/orders')
   }
   else{
-    toast.error(response.data.message)
+    toast.error(responsestripe.data.message)
   }
       break;
 
-      case "payfast":
-  const responsepf = await axios.post(
-    backendurl + "/api/order/payfast",
-    orderdata,
-    { headers: { token } }
-  );
-
-  if (responsepf.data.success) {
-    window.location.replace(responsepf.data.payment_url);
-    setcartitems({});
-  } else {
-    toast.error(responsepf.data.message);
-  }
-  break;
+ 
 
     
     default:
       break;
    }
    } catch (error) {
+    console.log(error);
     
-   }
+  }
   }
   return (
     <form onSubmit={onsubmit} className='px-4 sm:px[5vw] md:px-[7vw] lg:px-[9vw] mt-20'>
@@ -139,7 +156,7 @@ const Place_order = () => {
               {/* payment slection */}
             <div  className='flex flex-col lg:flex-row gap-3'>
               <div onClick={()=>setmethod("stripe")} className='flex items-center gap-3 border p-2 py-3 cursor-pointer '>
-                 <p className={`min-w-3.5 h-3.5 border rounded-full cursor-pointer ${method === "stripe" ? 'bg-green-400' : ''}`}></p> <img  className='h-5  mx-3 w-[40px] ' src={assets.slogo} alt="Stripe" />
+                 <p className={`min-w-3.5 h-3.5 border rounded-full cursor-pointer ${method === "stripe" ? 'bg-green-400' : ''}`}></p> <img  className='h-5  mx-3 w-[40px] ' src={assets.stripe} alt="Stripe" />
               </div>
               <div onClick={()=>setmethod("payfast")}   className='flex items-center gap-3 border p-2 py-3 cursor-pointer '>
                <p className={`min-w-3.5 h-3.5 border rounded-full cursor-pointer ${method === "payfast" ? 'bg-green-400' : ''}`}></p>  <img  className='h-5  mx-4' src={assets.plogo} alt="Googlepay" />

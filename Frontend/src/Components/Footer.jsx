@@ -4,7 +4,7 @@ import { assets } from '../assets/assets'
 const Footer = () => {
   return (
     // <div className='sticky mb-0 w-full text-white bg-black flex flex-col sm:grid grid-cols-[3fr-1fr-1fr] gap-14 my-10 mt-40 text-sm '>
-        <div className=' mb-0  p-5    bg-black flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] sm:gap-14 my-10 mt-10 text-sm'> 
+        <div className=' mb-0  p-5    bg-gray-900 flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] sm:gap-14 my-10 mt-10 text-sm'> 
         <div >
                  <img className='w-12 sm:w-15 md:w-18 lg:w-20' src={assets.glogo} alt="" />
           {/* <h2 className=' text-xl font-bold mb-5 mt-2 text-white'>Diamond <br /> Collection</h2> */}

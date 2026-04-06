@@ -8,25 +8,50 @@ import productrouter from "./routes/productroute.js";
 import cartrouter from "./routes/cartroute.js";
 import orderrouter from "./routes/orderroutes.js";
 import googleAuthRoute from "./routes/googleAuthRoute.js";
+import path from "path";
+import adminrouter from "./routes/adminRoute.js"
+import { seedSuperAdmin } from "./controllers/adminController.js"
+// import custom from "./routes/userroute.js";
+import wishlistRoute from "./routes/wishlistRoute.js"
+import slideRouter from "./routes/slideRoute.js"
+import inventoryrouter from "./routes/inventoryRoute.js"
+import productmodel from "./models/productmodel.js"
+
 
 
 // appconfig
 const app=express()
 const  port=process.env.PORT || 4000;
 connectdb()
-connectcloud()
+seedSuperAdmin()
+// connectcloud()
 // middleware
 app.use(express.json())
 
-app.use(cors())
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static("uploads"));
 
+
+app.use(cors())
 //api endpoints
 app.use('/api/user',userrouter);
 app.use('/api/product',productrouter)
 app.use('/api/cart',cartrouter)
 app.use('/api/order',orderrouter)
 app.use('/api/auth', googleAuthRoute);
-
+app.use("/api/wishlist",wishlistRoute)
+app.use('/api/customer', userrouter);
+app.use('/api/admin', adminrouter)
+app.use("/api/slide", slideRouter)
+app.use("/api/inventory", inventoryrouter)
+// TEMPORARY — remove after running once
+// app.post('/api/migrate-stock', async (req, res) => {
+//   const result = await productmodel.updateMany(
+//     { stock: { $exists: false } },
+//     { $set: { stock: 0, lowStockAlert: 10, alertSent: false } }
+//   )
+//   res.json({ success: true, updated: result.modifiedCount })
+// })
 app.get('/',(req,res)=>{
     res.send('api working')
 })

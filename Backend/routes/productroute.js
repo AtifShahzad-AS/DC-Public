@@ -1,5 +1,5 @@
 import express from 'express'
-import {addproduct,listproduct,removeproduct,singleproduct} from "../controllers/productcontroller.js"
+import {addproduct,listproduct,removeproduct,singleproduct,batchProducts} from "../controllers/productcontroller.js"
 import upload from '../middleware/multer.js';
 import adminauth from '../middleware/adminauth.js';
 const productrouter=express.Router();
@@ -8,4 +8,5 @@ productrouter.post('/add',adminauth,upload.fields([{name:'image1',maxCount:"1"},
 productrouter.get('/list',listproduct);
 productrouter.post('/remove',adminauth,removeproduct);
 productrouter.post('/single',singleproduct);
+productrouter.post('/batch', batchProducts);
 export default productrouter

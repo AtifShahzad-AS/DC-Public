@@ -4,7 +4,7 @@ import usermodel from "../models/usermodel.js";
 import jwt from "jsonwebtoken";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
+console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
 export const googleLogin = async (req, res) => {
   try {
     const { credential } = req.body; // ID token from frontend
@@ -40,7 +40,7 @@ export const googleLogin = async (req, res) => {
         name,
         email,
         password: "", // empty as Google user
-        image: [], // keep as array if needed
+        image: picture || "", // keep as array if needed
         googleId,
         googleImage: picture,
       });

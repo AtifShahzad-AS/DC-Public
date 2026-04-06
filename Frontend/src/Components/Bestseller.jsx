@@ -22,7 +22,7 @@ const Bestseller = () => {
             <p className='w-3/4 text-center m-auto text-xs sm:text-sm md:text-base'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, perspiciatis?</p>
         </div>
       {/* rendring product */}
-      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6 gap-y-6'>
+      <div className='grid gap-2 grid-cols-2  sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 lg:gap-6 gap-y-6'>
         { bestseller.map((item,index)=>(
           <Productitems key={index} id={item._id} image={Array.isArray(item.image) ? item.image[0] : item.image } name={item.name} price={item.price} />
         ))}

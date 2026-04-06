@@ -14,7 +14,7 @@ const Add = ({token}) => {
   const [desc,setdesc]=useState('');
   const [price,setprice]=useState('');
   const [category,setcategory]=useState('bedsheets');
-  const [subcategory,setsubcategory]=useState('winter');
+  // const [subcategory,setsubcategory]=useState('winter');
   const [bestseller,setbestseller]=useState(false);
   const [size,setsize]=useState([])
 
@@ -27,7 +27,7 @@ const Add = ({token}) => {
     formdata.append("description",desc)
     formdata.append("price",price)
     formdata.append("category",category)
-    formdata.append("subcategory",subcategory)
+    // formdata.append("subcategory",subcategory)
     formdata.append("sizes",JSON.stringify(size))
     formdata.append("bestseller",bestseller)
 
@@ -118,7 +118,7 @@ const Add = ({token}) => {
    <div>
   <p className="mb-2">Product Sizes</p>
   <div className="flex gap-3">
-    {["Single", "Double", "King Size"].map((sz) => (
+    {["Single", "Double","Queen", "King Size"].map((sz) => (
       <div
         key={sz}
         onClick={() =>
@@ -163,3 +163,4 @@ const Add = ({token}) => {
 }
 
 export default Add
+

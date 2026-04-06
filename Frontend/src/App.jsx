@@ -18,6 +18,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Contact from './Pages/Contact'
 import Verify from './Pages/Verify'
 import Profile from './Pages/Profile'
+import Verifypf from './Pages/Verifypf'
+import Wishlist from './Pages/wishlist'
 
 const App = () => {
 
@@ -29,7 +31,7 @@ const App = () => {
   const hideLayout = hideLayoutRoutes.includes(location.pathname);
 
   return (
-    <div>
+    <div className='bg-slate-100'>
 
       <ToastContainer position="top-right" autoClose={2000} />
 
@@ -49,6 +51,8 @@ const App = () => {
         <Route path="/placeorder" element={<Place_order />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/verify" element={<Verify />} />
+        <Route path="/verifypf" element={<Verifypf />} />
+<Route path="/wishlist" element={<Wishlist/>}/>
       </Routes>
 
       {/* Show Footer only when NOT on login page */}

@@ -1,91 +1,71 @@
-import React, { useContext } from 'react'
-import { ShopContext } from '../../Context/Shopcontext'
-import {Link} from 'react-router-dom'
-import {anticipate, motion} from "motion/react"
-const Productitems = ({id,image,name,price}) => {
-    const {currency}=useContext(ShopContext);
-  return (
-   
-    <Link
-  className="text-gray-700 cursor-pointer group block relative rounded-2xl overflow-hidden"
-  to={`/product/${id}`}
->
-  {/* Product Image */}
-  <img
-    className="w-full h-auto rounded-2xl transition-transform duration-700 group-hover:scale-110"
-    src={image}
-    alt={name}
-  />
+// import React, { useContext } from "react";
+// import { Link } from "react-router-dom";
+// import { ShopContext } from "../../Context/Shopcontext";
+// import { FaHeart, FaRegHeart } from "react-icons/fa";
+// import axios from "axios";
+// import { currency } from "../../../Admin/src/App";
 
-  {/* Hover Overlay */}
-  <div
-    className="absolute inset-0 flex flex-col items-center justify-center 
-               bg-black/60 opacity-0 group-hover:opacity-100 
-               transition-opacity duration-500 rounded-2xl"
-  >
-    <p className="text-white text-lg font-semibold mb-1">{name}</p>
-    <p className="text-white text-sm mb-3">
-      {currency}
-      {price}
-    </p>
-    <div className="flex gap-3">
-      <button className="bg-gray-400 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-medium hover:bg-blue-500 transition">
-        Shop Now
-      </button>
-     
-    </div>
-  </div>
-</Link>
- 
+// const Productitems = ({ id, image, name, price, rating = 4.5 }) => {
+//   const { backendurl, token, wishlist, setWishlist } = useContext(ShopContext);
 
-   
+//   // Toggle wishlist
+//   const handleWishlist = async (e) => {
+//     e.preventDefault();
+//     if (!token) return;
 
-
-  )
-}
-
-export default Productitems
-
-// import React, { useContext } from 'react'
-// import { ShopContext } from '../../Context/Shopcontext'
-// import { Link } from 'react-router-dom'
-
-// const Productitems = ({ id, image, name, price }) => {
-//   const { currency } = useContext(ShopContext);
+//     try {
+//       const res = await axios.post(
+//         backendurl + "/api/wishlist/toggle",
+//         { productId: id },
+//         { headers: { Authorization: `Bearer ${token}` } }
+//       );
+//       if (res.data.success) {
+//         setWishlist(res.data.wishlist);
+//       }
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   };
 
 //   return (
-//     <Link
-//       to={`/product/${id}`}
-//       className="block bg-white rounded-2xl shadow-md hover:shadow-xl 
-//                  transition duration-300 overflow-hidden group"
-//     >
-//       {/* Product Image */}
-//       <div className="overflow-hidden">
+//     <Link to={`/product/${id}`} className="text-gray-700 cursor-pointer group">
+//       <div className="overflow-hidden rounded-lg shadow-sm hover:shadow-lg  transition-shadow relative">
 //         <img
+//           className="hover:scale-110 transition ease-in-out duration-300 w-full h-25 sm:h-64 object-cover"
 //           src={image}
 //           alt={name}
-//           className="w-full h-64 object-cover group-hover:scale-105 transition duration-500"
 //         />
-//       </div>
-
-//       {/* Product Details */}
-//       <div className="p-4">
-//         <p className="text-gray-800 font-semibold text-lg mb-1">{name}</p>
-
-//         <p className="text-gray-600 text-md mb-3">
-//           {currency}{price}
-//         </p>
-
-//         {/* Shop Now Button */}
-//         {/* <button
-//           className="w-full bg-red-500 text-white py-2 rounded-lg 
-//                      font-medium hover:bg-red-600 transition"
+//         {/* Heart Icon Top Right */}
+//         <button
+//           onClick={handleWishlist}
+//           className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition"
 //         >
-//           Shop Now
-//         </button> */}
-//           <button className="w-full bg-gray-400 text-white px-4 py-2  rounded-lg font-medium hover:bg-red-500 transition">
-//         Shop Now
-//       </button>
+//           {wishlist?.includes(id) ? (
+//             <FaHeart className="text-red-500" size={20} />
+//           ) : (
+//             <FaRegHeart size={20} />
+//           )}
+//         </button>
+
+//         <div className=" p-1.5 sm:p-3 bg-white hover:bg-blue-600 ">
+//           <p className="text-sm font-medium sm:mb-1 line-clamp-2 group-hover:text-white transition-colors">
+//             {name}
+//           </p>
+//           <div className="flex items-center mb-0.5 sm:mb-2 ">
+//             <div className="flex text-yellow-400">
+//               {[...Array(5)].map((_, i) => (
+//                 <span
+//                   key={i}
+//                   className={i < Math.floor(rating) ? "text-yellow-400" : "text-gray-300"}
+//                 >
+//                   ★
+//                 </span>
+//               ))}
+//             </div>
+//             <span className="text-xs text-gray-500 ml-1">({rating})</span>
+//           </div>
+//           <p className="text-sm sm:text-lg font-semibold text-gray-900 hover:text-white">{currency}{price}</p>
+//         </div>
 //       </div>
 //     </Link>
 //   );
@@ -93,27 +73,107 @@ export default Productitems
 
 // export default Productitems;
 
- // <Link className='text-gray-700 cursor-pointer' to={`/product/${id}`}>
-    // {/* <motion.div  transition={{duration:1,}}   whileHover={{scale:'1.1',rotate:5,y:20,}}  className='overflow-hidden'>
-    //  <img className='rounded-2xl hover:' src={image} alt="img" />
-    // </motion.div> */}
-    //  <div className="relative overflow-hidden rounded-2xl transition-transform duration-700 hover:scale-110 hover:rotate-1 hover:translate-x-1">
-    //   <img className="w-full h-auto rounded-2xl" src={image} alt="img" />
 
-    //   {/* Overlay */}
-    //   <div
-    //     className="absolute inset-0 flex items-center justify-center 
-    //                bg-black/50 opacity-0 transition-opacity duration-300 
-    //                hover:opacity-100 rounded-2xl text-red-500 text-2xl font-bold"
-    //   > Shop Now
-    //     {/* <a
-    //       href="https://example.com"        className="text-white text-lg font-semibold no-underline"     >   Visit Link        </a> */}
-    //   </div>
-    // </div>
 
-    //  <p className='pt-3 pb-1 text-sm'>{name}</p>
-    //  <p className='text-sm font-medium'>{currency}{price}</p>
-    // </Link>
-     {/* <button className="bg-red-500 text-white px-4 py-1 rounded-md font-medium hover:bg-red-600 transition">
-        Buy Now
-      </button> */}
+
+
+
+
+
+import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
+import { ShopContext } from '../../Context/Shopcontext'
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
+import axios from 'axios'
+
+const Productitems = ({ id, image, name, price, rating = 4.5 }) => {
+  const { backendurl, token, wishlist, setWishlist, currency } = useContext(ShopContext)
+
+  const handleWishlist = async (e) => {
+    e.preventDefault()
+    if (!token) return
+    try {
+      const res = await axios.post(
+        backendurl + '/api/wishlist/toggle',
+        { productId: id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      if (res.data.success) {
+        setWishlist(res.data.wishlist)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const isWishlisted = wishlist?.includes(id)
+
+  return (
+    <Link to={`/product/${id}`} className="group block">
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden transition-all duration-300 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-50">
+
+        {/* ── Image ── */}
+        <div className="relative overflow-hidden bg-slate-50">
+          <img
+            src={image}
+            alt={name}
+            className="w-full h-25 sm:h-56 object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+
+          {/* Wishlist button */}
+          <button
+            onClick={handleWishlist}
+            className={`absolute top-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 border
+              ${isWishlisted
+                ? 'bg-red-50 border-red-200 text-red-500'
+                : 'bg-white/90 border-slate-200 text-slate-400 hover:text-red-400 hover:border-red-200'
+              }`}
+          >
+            {isWishlisted
+              ? <FaHeart size={14} />
+              : <FaRegHeart size={14} />
+            }
+          </button>
+        </div>
+
+        {/* ── Info ── */}
+        <div className="px-2 py-1 sm:p-4">
+          <p className="text-sm font-semibold text-slate-800 line-clamp-2 mb-0 sm:mb-1.5 group-hover:text-blue-600 transition-colors duration-200">
+            {name}
+          </p>
+
+          {/* Stars */}
+          <div className="flex items-center gap-1 sm:mb-2">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <svg
+                  key={i}
+                  className={`w-3 h-3 ${i < Math.floor(rating) ? 'text-yellow-400' : 'text-slate-200'}`}
+                  fill="currentColor" viewBox="0 0 20 20"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+              ))}
+            </div>
+            <span className="text-[11px] text-slate-400">({rating})</span>
+          </div>
+
+          {/* Price + Cart button */}
+          <div className="flex items-center justify-between">
+            <p className="text-base sm:text-lg font-bold text-slate-900">
+              {currency}{price}
+            </p>
+            <div className="w-8 h-8 rounded-lg bg-slate-100 group-hover:bg-blue-600 flex items-center justify-center transition-colors duration-200 flex-shrink-0">
+              <svg className="w-4 h-4 text-slate-500 group-hover:text-white transition-colors duration-200" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </Link>
+  )
+}
+
+export default Productitems

@@ -19,7 +19,9 @@ try {
     if (!token) {
         return null;  
     }
-    const responce=await axios.post(backendurl +"/api/order/verifys",{success,orderId},{headers:{token}})
+    const responce=await axios.post(backendurl +"/api/order/verifys",{success,orderId},{headers: {
+    Authorization: `Bearer ${token}`
+  }})
     if(responce.data.success){
         setcartitems({})
         navigate('/orders')

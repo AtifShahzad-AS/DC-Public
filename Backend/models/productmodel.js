@@ -1,15 +1,20 @@
-import mongoose, { Mongoose } from "mongoose";
-const productschema= new mongoose.Schema({
-    name:{type:String ,required:true},
-    description:{type:String ,required:true},
-    price:{type:Number ,required:true},
-    image:{type:Array ,required:true},
-    category:{type:String ,required:true},
-    subcategory:{type:String ,required:true},
-    sizes:{type:[String] ,required:true},
-    bestseller:{type:Boolean },
-    date:{type:Date ,default:Date.now()},
+import mongoose from "mongoose"
 
-})
-const productmodel= mongoose.models.product || mongoose.model('product',productschema);
+const productSchema = new mongoose.Schema({
+  name:          { type: String,  required: true },
+  description:   { type: String,  required: true },
+  price:         { type: Number,  required: true },
+  image:         { type: Array,   required: true },
+  category:      { type: String,  required: true },
+//   subcategory:   { type: String,  required: true },
+  sizes:         { type: Array,   required: true },
+  date:          {type:Date ,default:Date.now()},
+  bestseller:    { type: Boolean },
+  stock:         { type: Number,  default: 0 },
+  lowStockAlert: { type: Number,  default: 10 },
+  alertSent:     { type: Boolean, default: false },
+  isActive:      { type: Boolean, default: true },
+}, { timestamps: true })
+
+const productmodel = mongoose.models.product || mongoose.model('product', productSchema)
 export default productmodel

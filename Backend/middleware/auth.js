@@ -1,19 +1,29 @@
-import { json } from 'express';
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
-const authuser= async(req,res,next)=>{
-const {token}= req.headers;
-if(!token){
-   return res.json({success:false,message:"User not authorized login first"})
-}
-    try{
-        const decode_token= jwt.verify(token,process.env.JWT_KEY);
-        req.body.userId= decode_token.id;
-        next();
+const authuser = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        success: false,
+        message: "Not authorized. No token.",
+      });
     }
-    catch(error){
-        console.log(error)
-        res.json({success:false,message:error.message})
-    }
-}
-export default authuser
+
+    const token = authHeader.split(" ")[1];
+
+    const decoded = jwt.verify(token, process.env.JWT_KEY);
+
+    req.userId = decoded.id;
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+    });
+  }
+};
+
+export default authuser;

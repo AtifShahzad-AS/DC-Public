@@ -15,23 +15,37 @@ import star_dull_icon from './star_dull_icon.png'
 import b10 from './b10.jpeg'
 import uploadarea from './upload_area.svg'
 import bglog from './bglog.jpg'
-import slogo from './slogo.png'
-import plogo from './plogo.png'
+import slogo from './slogo.jpg'
 import clogo from './clogo.png'
+import stripe from './slogo.png'
+import plogo from './plogo.png'
+import b111 from './b111.jpeg'
 import log from './f1.png'
 import scover from './scover.png'
 import bedd from './bedd.jpeg'
 import h1bed from './hb.png'
 import b6 from './b6.jpeg'
+import cushion from './pillow.jpg'
+import pillow from './pillows.jpg'
+import blanket from './blanket.png'
+import quilt from './quilt.jpg'
+import curtains from './curtains.jpg'
 import glogo from './glogo2.png'
 
 
 
 export const assets ={
    log,
+   b111 ,   cushion,
+   quilt,
+   blanket,
+   curtains,
+   pillow,
    b6,
+   clogo,
    glogo,
    h1bed,
+   stripe,
    bedd,
    scover,
     bglog,
@@ -43,7 +57,7 @@ export const assets ={
     cart_icon,
     user,
     slogo,
-    clogo,
+   
     plogo,
     search_icon,
     menu,

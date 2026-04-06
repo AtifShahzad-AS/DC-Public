@@ -79,6 +79,7 @@ else{
    <option value="Shiped">Shiped</option>
    <option value="Out for delievery">Out for delievery</option>
    <option value="delievered">Delievered</option>
+   <option value="Cancelled">Cancelled</option>
    </select>
 </div>
         ))
