@@ -17,6 +17,8 @@ import Login from './Components/Login'
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
 import AdminManagement from './Pages/AdminManagement'
+import Settings from './Pages/Settings'
+
 
 export const backendurl = import.meta.env.VITE_BACKEND_URL
 export const currency = "Rs "
@@ -51,6 +53,8 @@ const App = () => {
                 <Route path="/banners" element={<Banners token={token} />} />
                 <Route path='/admins' element={<AdminManagement token={token} />} />
                  <Route path='/inventory' element={<Inventory token={token} />} />
+                 <Route path='/settings' element={<Settings token={token} />} />
+                
               </Routes>
             </main>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { assets } from '../assets/assets'
-
+import Title from '../Components/Title'
 const categories = [
   {
     name: 'Bedsheets',
@@ -78,18 +78,21 @@ const Categories = () => {
   }
 
   return (
-    <section className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[4vw] py-10 ">
-
+    <section className="px-3 sm:px-[5vw] md:px-[7vw] lg:px-[4vw] py-5 sm:py-10 ">
+  <div className='text-center '>
+            <Title text1={'Browse by '} text2={'Category'}/>
+        </div>
       {/* ── Section Header ── */}
-      <div className="flex items-end justify-between mb-7">
-        <div>
-          <p className="text-xs font-semibold text-blue-600 uppercase tracking-widest mb-1">
+      <div className="flex items-end justify-between mb-2 sm:mb-7">
+       
+         <div> 
+          {/* <p className="text-xs font-semibold text-blue-600 uppercase tracking-widest mb-1">
             Shop Our Collection
           </p>
           <h2 className="text-2xl   sm:text-3xl font-bold text-slate-900 leading-tight">
             Browse by <span className="text-blue-600 ">Category</span>
-          </h2>
-        </div>
+          </h2> */}
+        </div> 
 
         {/* Nav Buttons */}
         <div className="flex gap-2">

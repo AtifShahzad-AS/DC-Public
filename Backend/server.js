@@ -15,8 +15,11 @@ import { seedSuperAdmin } from "./controllers/adminController.js"
 import wishlistRoute from "./routes/wishlistRoute.js"
 import slideRouter from "./routes/slideRoute.js"
 import inventoryrouter from "./routes/inventoryRoute.js"
-import productmodel from "./models/productmodel.js"
-
+// import productmodel from "./models/productmodel.js"
+import reviewrouter from "./routes/reviewRoute.js"
+import settingsrouter from "./routes/settingsRoute.js"
+import bannerrouter from "./routes/bannerRoute.js"
+import contactRoute from "./routes/contactRoute.js";
 
 
 // appconfig
@@ -44,6 +47,10 @@ app.use('/api/customer', userrouter);
 app.use('/api/admin', adminrouter)
 app.use("/api/slide", slideRouter)
 app.use("/api/inventory", inventoryrouter)
+app.use("/api/review", reviewrouter)
+app.use("/api/settings", settingsrouter)
+app.use("/api/banner", bannerrouter)
+app.use("/api/contact", contactRoute);
 // TEMPORARY — remove after running once
 // app.post('/api/migrate-stock', async (req, res) => {
 //   const result = await productmodel.updateMany(

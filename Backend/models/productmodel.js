@@ -14,6 +14,8 @@ const productSchema = new mongoose.Schema({
   lowStockAlert: { type: Number,  default: 10 },
   alertSent:     { type: Boolean, default: false },
   isActive:      { type: Boolean, default: true },
+  rating:      { type: Number, default: 0 },
+reviewCount: { type: Number, default: 0 },
 }, { timestamps: true })
 
 const productmodel = mongoose.models.product || mongoose.model('product', productSchema)

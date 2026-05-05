@@ -8,20 +8,27 @@ import Categories from './Categories'
 import CategoryCard from '../Components/CategoryCard'
 import Slider from '../Components/Slider'
 import Spage from '../Components/spage'
-import Homecatslider from '../Components/Homecatslider'
-
+import BannerStrip from '../Components/BannerStrip'
 
 
 const Home = () => {
   return (
     <>
+    
    <Slider/>
+    {/* Top banner — above everything */}
+      <BannerStrip className=""
+       position="Top" />
     <Categories/>
 
    <div className='px-4  h-full sm:mb-10 '> 
      <CategoryCard/>
+      {/* Middle banner — between categories and products */}
+      <BannerStrip position="Middle" />
       <Latestcollection/>
       <Bestseller/>
+        {/* Bottom banner — before footer */}
+      <BannerStrip position="Bottom" />
       <Ourpolicy/>
     </div>
     </>

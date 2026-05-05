@@ -14,3 +14,10 @@ select,input,textarea{
     background-color: rgb(67, 79, 90);
     color: white;
 }
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

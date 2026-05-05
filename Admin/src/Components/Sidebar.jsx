@@ -24,9 +24,11 @@
 
 // export default Sidebar
 
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import axios from 'axios'
+import { backendurl } from '../App'
 
 const Icon = ({ d, d2 }) => (
   <svg className="w-[15px] h-[15px] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -37,6 +39,22 @@ const Icon = ({ d, d2 }) => (
 const Sidebar = ({ settoken }) => {
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
+  const [siteName, setSiteName] = useState('Diamond Collection')
+const [siteLogo, setSiteLogo] = useState('')
+
+useEffect(() => {
+  const fetchSettings = async () => {
+    try {
+      const { data } = await axios.post(backendurl + '/api/settings/get')
+      if (data.success) {
+        setSiteName(data.settings.storeName || 'Diamond Collection')
+        setSiteLogo(data.settings.logo || '')
+      }
+    } catch (err) { console.log(err) }
+  }
+  fetchSettings()
+}, [])
+
 
   const logout = () => {
     localStorage.removeItem('token')
@@ -113,6 +131,17 @@ const Sidebar = ({ settoken }) => {
     </svg>
   )
 },
+{
+      
+  to: '/settings', label: 'Settings',
+  icon: (
+    <svg className="w-[15px] h-[15px]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+    </svg>
+  )
+
+    }
        
       ]
     },
@@ -123,10 +152,20 @@ const Sidebar = ({ settoken }) => {
       {/* Logo */}
       <div className="px-4 py-5 border-b border-white/8 flex items-center justify-between">
         {!collapsed && (
-          <div>
-            <div className="text-white text-sm font-semibold">Diamond Collection</div>
-            <div className="text-white/35 text-[10px] mt-0.5">Home textiles</div>
-          </div>
+          // <div>
+          //   <div className="text-white text-sm font-semibold">Diamond Collection</div>
+          //   <div className="text-white/35 text-[10px] mt-0.5">Home textiles</div>
+          // </div>
+            <div className="flex items-center gap-2">
+    {siteLogo
+      ? <img src={siteLogo.logo} className="h-7 object-contain" alt={siteName.storeName} />
+      : null
+    }
+    <div>
+      <div className="text-white text-sm font-semibold">{siteName} Admin</div>
+      <div className="text-white/35 text-[10px] mt-0.5">Home textiles</div>
+    </div>
+  </div>
         )}
         <button onClick={() => setCollapsed(!collapsed)} className="text-white/40 hover:text-white/80 transition-colors ml-auto">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -136,7 +175,7 @@ const Sidebar = ({ settoken }) => {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-3 overflow-y-auto">
+      <nav className="flex-1 py-3 overflow-y-auto scrollbar-hide">
         {groups.map((group) => (
           <div key={group.section}>
             {!collapsed && (
@@ -186,7 +225,7 @@ const Sidebar = ({ settoken }) => {
             <>
               <div className="flex-1 min-w-0">
                 <div className="text-white text-xs font-medium">Admin</div>
-                <div className="text-white/35 text-[10px]">Super Admin</div>
+                {/* <div className="text-white/35 text-[10px]">Super Admin</div> */}
               </div>
               <button onClick={logout} className="text-white/40 hover:text-red-400 transition-colors" title="Logout">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">

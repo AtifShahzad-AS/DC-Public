@@ -1,14 +1,31 @@
 import React from 'react'
 import { assets } from '../assets/assets'
-
+import { NavLink } from 'react-router-dom'
+import { useContext } from 'react'
+import { ShopContext } from '../../Context/Shopcontext'
 const Footer = () => {
+  const {siteSettings}= useContext(ShopContext)
   return (
     // <div className='sticky mb-0 w-full text-white bg-black flex flex-col sm:grid grid-cols-[3fr-1fr-1fr] gap-14 my-10 mt-40 text-sm '>
         <div className=' mb-0  p-5    bg-gray-900 flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] sm:gap-14 my-10 mt-10 text-sm'> 
         <div >
                  <img className='w-12 sm:w-15 md:w-18 lg:w-20' src={assets.glogo} alt="" />
-          {/* <h2 className=' text-xl font-bold mb-5 mt-2 text-white'>Diamond <br /> Collection</h2> */}
-        
+         {/* <NavLink to="/">
+  {siteSettings.logo ? (
+    <img
+      className='w-12 sm:w-15 lg:w-20 object-contain'
+      src={siteSettings.logo}
+      alt={siteSettings.storeName}
+    />
+  ) : (
+    // Fallback to your default logo asset
+    <img
+      className='w-12 sm:w-15 lg:w-20'
+      src={assets.glogo}
+      alt={siteSettings.storeName}
+    />
+  )}
+</NavLink> */}
           {/* <img src={assets.logo} className='mb-5 w-32' alt="" /> */}
           <p className='w-full md:w-2/3 text-white mt-4'>
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Itaque, voluptatum?</p>

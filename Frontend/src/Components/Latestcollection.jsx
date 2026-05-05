@@ -21,7 +21,8 @@ const Latestcollection = () => {
       {/* rendring product */}
       <div  className=' grid gap-2 grid-cols-2  sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 lg:gap-6 gap-y-6'>
         { latestproducts.map((item,index)=>(
-          <Productitems key={index} id={item._id} image={Array.isArray(item.image) ? item.image[0] : item.image } name={item.name} price={item.price} />
+          <Productitems key={index} id={item._id} image={Array.isArray(item.image) ? item.image[0] : item.image } name={item.name} price={item.price} rating={item.rating || 0}
+reviewCount={item.reviewCount || 0} /> 
         ))}
       </div>
       

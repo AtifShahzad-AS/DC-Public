@@ -95,7 +95,7 @@ import React, { useEffect, useState, useRef } from "react"
 import Swiper from "swiper/bundle"
 import "swiper/css/bundle"
 import axios from "axios"
-
+import BannerStrip from "./BannerStrip"
 const backendurl = import.meta.env.VITE_BACKEND_URL
 
 const Slider = () => {
@@ -153,9 +153,10 @@ const Slider = () => {
 
   if (loading) {
     return (
-      <div className="w-full mt-12 sm:mt-20 px-2 sm:px-6
+      <div className="  w-full mt-12 sm:mt-20 px-2 sm:px-6
         h-[200px] sm:h-[350px] md:h-[450px] lg:h-[520px] xl:h-[600px]
         bg-slate-100 rounded-lg animate-pulse flex items-center justify-center">
+          
         <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     )

@@ -11,19 +11,32 @@ import {toast} from "react-toastify"
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [drop, setdrop] = useState(false)
+const {
+  token,
+  logoutUser,
+  getcartcount,
+  setshowsearch,
+  navigate,
+  wishlist,
+  userProfile,
+   siteSettings,
+} = useContext(ShopContext);
+  // const {token,settoken,getcartcount,setshowsearch,navigate,setcartitems,wishlist,setWishlist,userProfile}=useContext(ShopContext);
 
-  const {token,settoken,getcartcount,setshowsearch,navigate,setcartitems,wishlist,setWishlist,userProfile}=useContext(ShopContext);
-
-  const logout = () => {
-  console.log("logout() called");
-  localStorage.removeItem("token");
-  settoken("");
-  setcartitems({});
-  setWishlist([]);
+//   const logout = () => {
+//   console.log("logout() called");
+//   localStorage.removeItem("token");
+//   settoken("");
+//   setcartitems({});
+//   setWishlist([]);
+//   toast.success("Logged out");
+//   navigate("/", { replace: true });
+// };
+const logout = () => {
+  logoutUser();
   toast.success("Logged out");
   navigate("/", { replace: true });
 };
-
   return (
     <>
       {/* Top Navbar */}
@@ -31,6 +44,24 @@ const Navbar = () => {
         
         {/* Logo */}
          <img className='w-12 sm:w-15 md:17 lg:w-20 ' src={assets.glogo} alt="" />
+          
+{/* <NavLink to="/">
+  {siteSettings.logo ? (
+    <img
+      className='w-12 sm:w-15 lg:w-20 object-contain'
+      src={siteSettings.logo}
+      alt={siteSettings.storeName}
+    />
+  ) : (
+    // Fallback to your default logo asset
+    <img
+      className='w-12 sm:w-15 lg:w-20'
+      src={assets.glogo}
+      alt={siteSettings.storeName}
+    />
+  )}
+</NavLink> */}
+
 
         {/* Nav Links (Desktop only) */}
         <ul className='hidden  sm:flex sm:gap-7 md:gap-10   text-black border-gray-400  px-7 py-4 text-lg font-medium xl:text-xl xl:gap-20  backdrop-blur-lg rounded-full '>

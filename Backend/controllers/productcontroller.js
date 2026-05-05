@@ -20,19 +20,22 @@ const addproduct = async (req, res) => {
       })
     )
 
-    const productdata = {
-      name,
-      description,
-      price:      Number(price),
-      category,
-      sizes:      JSON.parse(sizes),
-      bestseller: bestseller === "true" ? true : false,
-      image:      imageurl,
-      date:       Date.now(),
-      stock:         parseInt(stock) || 0,
-      lowStockAlert: 10,
-      alertSent:     false,
-    }
+   // In addproduct controller
+const productdata = {
+  name,
+  description,
+  price:      Number(price),
+  // Normalize category on save
+  category:   category.trim().charAt(0).toUpperCase() +
+              category.trim().slice(1).toLowerCase(),
+  sizes:      JSON.parse(sizes),
+  bestseller: bestseller === "true",
+  image:      imageurl,
+  date:       Date.now(),
+  stock:      parseInt(stock) || 0,
+  lowStockAlert: 10,
+  alertSent:  false,
+}
 
     console.log(productdata)
 

@@ -149,6 +149,7 @@ const Product = () => {
 
   // Reviews state
   const [reviews, setReviews] = useState([])
+  const [reviewSubmittedMsg, setReviewSubmittedMsg] = useState(false)
   const [reviewLoading, setReviewLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [reviewForm, setReviewForm] = useState({
@@ -169,75 +170,91 @@ const Product = () => {
     }
   }
 
-  // Fetch reviews — ready for backend
-  const fetchReviews = async () => {
-    setReviewLoading(true)
-    try {
-      const { data } = await axios.post(backendurl + '/api/review/list', {
-        productId: productid
-      })
-      if (data.success) {
-        setReviews(data.reviews)
-        // Check if current user already reviewed
-        if (token && data.reviews.some(r => r.userId === data.currentUserId)) {
-          setHasReviewed(true)
-        }
-      }
-    } catch (err) {
-      // Reviews API not built yet — show empty state silently
-      console.log('Reviews not available yet')
-    } finally {
-      setReviewLoading(false)
+ // Fetch reviews — corrected
+const fetchReviews = async () => {
+  setReviewLoading(true)
+  try {
+    const { data } = await axios.post(backendurl + '/api/review/list', {
+      productId: productid
+    })
+    if (data.success) {
+      setReviews(data.reviews)
     }
+  } catch (err) {
+    console.log('Reviews not available yet')
+  } finally {
+    setReviewLoading(false)
   }
-
+}
+// Check if logged-in user already reviewed this product
+const checkUserReview = async () => {
+  if (!token) return
+  try {
+    const { data } = await axios.post(
+      backendurl + '/api/review/check',
+      { productId: productid },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    if (data.success) {
+      setHasReviewed(data.hasReviewed)
+    }
+  } catch (err) {
+    console.log('Check review error:', err)
+  }
+}
   // Submit review — ready for backend
-  const handleSubmitReview = async (e) => {
-    e.preventDefault()
-    if (!reviewForm.rating) {
-      alert('Please select a rating')
-      return
-    }
-    if (!reviewForm.comment.trim()) {
-      alert('Please write a comment')
-      return
-    }
-
-    setSubmitting(true)
-    try {
-      const { data } = await axios.post(
-        backendurl + '/api/review/add',
-        { productId: productid, ...reviewForm },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      if (data.success) {
-        setReviews(prev => [data.review, ...prev])
-        setReviewForm({ rating: 0, comment: '' })
-        setHasReviewed(true)
-      }
-    } catch (err) {
-      console.log('Submit review error:', err)
-    } finally {
-      setSubmitting(false)
-    }
+ const handleSubmitReview = async (e) => {
+  e.preventDefault()
+  if (!reviewForm.rating) {
+    alert('Please select a rating')
+    return
+  }
+  if (!reviewForm.comment.trim()) {
+    alert('Please write a comment')
+    return
   }
 
+  setSubmitting(true)
+  try {
+    const { data } = await axios.post(
+      backendurl + '/api/review/add',
+      { productId: productid, ...reviewForm },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    if (data.success) {
+      // ── Don't add to reviews list — it's pending approval ──
+      // Just mark as reviewed and clear form
+      setReviewForm({ rating: 0, comment: '' })
+      setHasReviewed(true)
+      setReviewSubmittedMsg(true)   // show a pending notice
+    } else {
+      alert(data.message)
+    }
+  } catch (err) {
+    console.log('Submit review error:', err)
+  } finally {
+    setSubmitting(false)
+  }
+}
   useEffect(() => {
     fetchproductdata()
   }, [productid])
 
   useEffect(() => {
-    if (activeTab === 'reviews') {
-      fetchReviews()
-    }
-  }, [activeTab, productid])
+  if (activeTab === 'reviews') {
+    fetchReviews()
+    checkUserReview()   // ← runs independently, correct source of truth
+  }
+}, [activeTab, productid, token])
 
   const hasSizes = productdata?.sizes && productdata.sizes.length > 0
 
   // Average rating
   const avgRating = reviews.length > 0
-    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-    : 4.5
+  ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+  : productdata?.rating > 0
+    ? productdata.rating.toFixed(1)
+    : null   // null means no rating yet
 
   if (!productdata) return <div className="opacity-0 h-screen" />
 
@@ -281,12 +298,18 @@ const Product = () => {
             </h1>
 
             {/* Rating row */}
-            <div className="flex items-center gap-2 mt-3">
-              <StarRating rating={Math.round(avgRating)} />
-              <span className="text-sm text-slate-500">
-                ({reviews.length > 0 ? `${avgRating} · ${reviews.length} reviews` : 'No reviews yet'})
-              </span>
-            </div>
+        <div className="flex items-center gap-2 mt-3">
+  {avgRating ? (
+    <>
+      <StarRating rating={Math.round(avgRating)} />
+      <span className="text-sm text-slate-500">
+        {avgRating} · {reviews.length > 0 ? reviews.length : productdata.reviewCount} review{(reviews.length || productdata.reviewCount) !== 1 ? 's' : ''}
+      </span>
+    </>
+  ) : (
+    <span className="text-sm text-slate-400">No reviews yet</span>
+  )}
+</div>
 
             <p className='mt-5 text-3xl font-bold text-slate-900'>
               {currency}{productdata.price}
@@ -453,11 +476,18 @@ const Product = () => {
                 </div>
               )}
 
-              {token && hasReviewed && (
-                <div className="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">
-                  You have already reviewed this product.
-                </div>
-              )}
+             {token && hasReviewed && (
+  <div className={`mb-6 p-3 rounded-lg border text-sm
+    ${reviewSubmittedMsg
+      ? 'bg-yellow-50 border-yellow-200 text-yellow-700'
+      : 'bg-green-50 border-green-200 text-green-700'
+    }`}>
+    {reviewSubmittedMsg
+      ? 'Your review has been submitted.'
+      : 'You have already reviewed this product.'
+    }
+  </div>
+)}
 
               {!token && (
                 <div className="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
