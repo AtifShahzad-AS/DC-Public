@@ -74,6 +74,7 @@ const Relatedproduct = ({ category, subcategory }) => {
   image={Array.isArray(item.image) ? item.image[0] : item.image}
   price={item.price}
   name={item.name}
+  stock={item.stock}
   rating={item.rating || 0}
   reviewCount={item.reviewCount || 0}   // ← add this
 />

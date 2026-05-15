@@ -257,234 +257,519 @@
 // export default ShopContextProvider;
 
 
-import React, { useEffect, useState, createContext } from "react";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+// import React, { useEffect, useState, createContext } from "react";
+// import { toast } from "react-toastify";
+// import { useNavigate } from "react-router-dom";
+// import axios from "axios";
 
 
 
-export const ShopContext = createContext();
+// export const ShopContext = createContext();
+
+// const ShopContextProvider = (props) => {
+
+//   const currency = "RS: ";
+//   const delievery_fee = 10;
+//   const backendurl = import.meta.env.VITE_BACKEND_URL;
+
+//   const navigate = useNavigate();
+
+//   /* ================= STATES ================= */
+
+//   const [token, settoken] = useState(
+//     localStorage.getItem("token") || ""
+//   );
+
+//   const [products, setproducts] = useState([]);
+//   const [cartitems, setcartitems] = useState({});
+//   const [wishlist, setWishlist] = useState([]);
+//   const [userProfile, setUserProfile] = useState(null);
+
+//   const [search, setsearch] = useState("");
+//   const [showsearch, setshowsearch] = useState(false);
+// // Add state
+// const [siteSettings, setSiteSettings] = useState({
+//   storeName: 'LuxeHome',
+//   tagline:   'Premium Home Textiles',
+//   logo:      ''
+// })
+//   // Fetch settings on mount
+// useEffect(() => {
+//   const fetchSiteSettings = async () => {
+//     try {
+//       const { data } = await axios.post(backendurl + '/api/settings/get')
+//       if (data.success) {
+//         setSiteSettings({
+//           storeName: data.settings.storeName || 'Diamond Collection',
+//           tagline:   data.settings.tagline   || 'Premium Home Textiles',
+//           logo:      data.settings.logo      || ''
+//         })
+//       }
+//     } catch (err) {
+//       console.log(err)
+//     }
+//   }
+//   fetchSiteSettings()
+// }, [])
+
+
+
+//   /* ================= LOGOUT ================= */
+
+//   const logoutUser = () => {
+//     localStorage.removeItem("token");
+//     settoken("");
+//     setcartitems({});
+//     setWishlist([]);
+//     setUserProfile(null);
+//   };
+
+//   /* ================= TOKEN VERIFY ================= */
+
+//   const verifyToken = async () => {
+//     try {
+//       const res = await axios.post(
+//         backendurl + "/api/user/profile",
+//         {},
+//         {
+//           headers: { Authorization: `Bearer ${token}` },
+//         }
+//       );
+
+//       if (res.data.success) {
+//         setUserProfile(res.data.user);
+//       } else {
+//         logoutUser();
+//       }
+//     } catch (error) {
+//       logoutUser();
+//     }
+//   };
+
+//   /* ================= PRODUCTS ================= */
+
+//   const getproductdata = async () => {
+//     try {
+//       const response = await axios.post(
+//         backendurl + "/api/product/list"
+//       );
+
+//       if (response.data.success) {
+//         setproducts(response.data.products);
+//       }
+//     } catch (error) {
+//       toast.error(error.message);
+//     }
+//   };
+
+//   useEffect(() => {
+//     getproductdata();
+//   }, []);
+
+//   /* ================= CART ================= */
+
+//   const getusercart = async () => {
+//     try {
+//       const response = await axios.post(
+//         backendurl + "/api/cart/get",
+//         {},
+//         {
+//           headers: { Authorization: `Bearer ${token}` },
+//         }
+//       );
+
+//       if (response.data.success) {
+//         setcartitems(response.data.cartdata);
+//       }
+//     } catch (error) {
+//       toast.error(error.message);
+//     }
+//   };
+
+//   const addtocart = async (itemid, size) => {
+//     if (!token) {
+//       toast.error("Please Login First");
+//       navigate("/login");
+//       return;
+//     }
+
+//     const product = products.find(p => p._id === itemid);
+//     const hasSizes = product?.sizes?.length > 0;
+
+//     if (hasSizes && !size) {
+//       toast.error("Please Select Size First");
+//       return;
+//     }
+
+//     const sizeKey = size || "default";
+//     let cartdata = structuredClone(cartitems);
+
+//     if (!cartdata[itemid]) cartdata[itemid] = {};
+//     cartdata[itemid][sizeKey] =
+//       (cartdata[itemid][sizeKey] || 0) + 1;
+
+//     setcartitems(cartdata);
+
+//     try {
+//       await axios.post(
+//         backendurl + "/api/cart/add",
+//         { itemid, size: sizeKey },
+//         {
+//           headers: { Authorization: `Bearer ${token}` },
+//         }
+//       );
+//     } catch (error) {
+//       toast.error(error.message);
+//     }
+//   };
+
+//   const updatequantity = async (itemid, size, quantity) => {
+//     let cartdata = structuredClone(cartitems);
+//     cartdata[itemid][size] = quantity;
+//     setcartitems(cartdata);
+
+//     try {
+//       await axios.post(
+//         backendurl + "/api/cart/update",
+//         { itemid, size, quantity },
+//         {
+//           headers: { Authorization: `Bearer ${token}` },
+//         }
+//       );
+//     } catch (error) {
+//       toast.error(error.message);
+//     }
+//   };
+
+//   const getcartcount = () => {
+//     let total = 0;
+//     for (const item in cartitems) {
+//       for (const size in cartitems[item]) {
+//         total += cartitems[item][size];
+//       }
+//     }
+//     return total;
+//   };
+
+//   const getcartamount = () => {
+//     let total = 0;
+
+//     for (const item in cartitems) {
+//       const product = products.find(p => p._id === item);
+
+//       for (const size in cartitems[item]) {
+//         total += product.price * cartitems[item][size];
+//       }
+//     }
+
+//     return total;
+//   };
+
+//   /* ================= WISHLIST ================= */
+
+//   const fetchWishlist = async () => {
+//     try {
+//       const res = await axios.post(
+//         backendurl + "/api/wishlist/toggle",
+//         {},
+//         { headers: { Authorization: `Bearer ${token}` } }
+//       );
+
+//       if (res.data.success) {
+//         setWishlist(res.data.wishlist);
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+
+//   /* ================= PROFILE UPDATE ================= */
+
+//   const updateUserProfile = async (formData) => {
+//     try {
+//       const response = await axios.post(
+//         backendurl + "/api/user/update-profile",
+//         formData,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "multipart/form-data",
+//           },
+//         }
+//       );
+
+//       if (response.data.success) {
+//         setUserProfile(response.data.user);
+//         toast.success("Profile updated successfully");
+//       }
+//     } catch (error) {
+//       toast.error(error.message);
+//     }
+//   };
+
+//   /* ================= AUTH EFFECT ================= */
+
+//   useEffect(() => {
+//     if (token) {
+//       verifyToken();
+//       getusercart();
+//       fetchWishlist();
+//     }
+//   }, [token]);
+
+//   /* ================= CONTEXT VALUE ================= */
+
+//   const value = {
+//     products,
+//     currency,
+//     delievery_fee,
+
+//     search,
+//     setsearch,
+//     showsearch,
+//     setshowsearch,
+
+//     cartitems,
+//     addtocart,
+//     updatequantity,
+//     getcartcount,
+//     getcartamount,
+//     setcartitems,
+
+//     wishlist,
+//     setWishlist,
+
+//     token,
+//     settoken,
+//     logoutUser,
+
+//     userProfile,
+//     setUserProfile,
+//     updateUserProfile,
+
+//     backendurl,
+//     navigate,
+//     siteSettings,
+//   };
+
+//   return (
+//     <ShopContext.Provider value={value}>
+//       {props.children}
+//     </ShopContext.Provider>
+//   );
+// };
+
+// export default ShopContextProvider;
+
+import React, { useEffect, useState, createContext } from "react"
+import { toast } from "react-toastify"
+import { useNavigate } from "react-router-dom"
+import axios from "axios"
+
+export const ShopContext = createContext()
 
 const ShopContextProvider = (props) => {
 
-  const currency = "RS: ";
-  const delievery_fee = 10;
-  const backendurl = import.meta.env.VITE_BACKEND_URL;
+  const currency   = "RS: "
+  const backendurl = import.meta.env.VITE_BACKEND_URL
+  const navigate   = useNavigate()
 
-  const navigate = useNavigate();
+  /* ── States ── */
+  const [token, settoken]           = useState(localStorage.getItem("token") || "")
+  const [products, setproducts]     = useState([])
+  const [cartitems, setcartitems]   = useState({})
+  const [wishlist, setWishlist]     = useState([])
+  const [userProfile, setUserProfile] = useState(null)
+  const [search, setsearch]         = useState("")
+  const [showsearch, setshowsearch] = useState(false)
 
-  /* ================= STATES ================= */
+  // ── Site + Delivery settings ──
+  const [siteSettings, setSiteSettings] = useState({
+    storeName: 'Diamond Collection',
+    tagline:   'Premium Home Textiles',
+    logo:      ''
+  })
+  const [deliveryFee, setDeliveryFee]           = useState(200)   // default Rs 200
+  const [freeDeliveryAbove, setFreeDeliveryAbove] = useState(3000) // default Rs 3000
 
-  const [token, settoken] = useState(
-    localStorage.getItem("token") || ""
-  );
-
-  const [products, setproducts] = useState([]);
-  const [cartitems, setcartitems] = useState({});
-  const [wishlist, setWishlist] = useState([]);
-  const [userProfile, setUserProfile] = useState(null);
-
-  const [search, setsearch] = useState("");
-  const [showsearch, setshowsearch] = useState(false);
-// Add state
-const [siteSettings, setSiteSettings] = useState({
-  storeName: 'LuxeHome',
-  tagline:   'Premium Home Textiles',
-  logo:      ''
-})
-  // Fetch settings on mount
-useEffect(() => {
-  const fetchSiteSettings = async () => {
-    try {
-      const { data } = await axios.post(backendurl + '/api/settings/get')
-      if (data.success) {
-        setSiteSettings({
-          storeName: data.settings.storeName || 'Diamond Collection',
-          tagline:   data.settings.tagline   || 'Premium Home Textiles',
-          logo:      data.settings.logo      || ''
-        })
+  /* ── Fetch settings once on mount ── */
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const { data } = await axios.post(backendurl + '/api/settings/get')
+        if (data.success) {
+          setSiteSettings({
+            storeName: data.settings.storeName || 'Diamond Collection',
+            tagline:   data.settings.tagline   || 'Premium Home Textiles',
+            logo:      data.settings.logo      || ''
+          })
+          setDeliveryFee(data.settings.deliveryFee       ?? 200)
+          setFreeDeliveryAbove(data.settings.freeDeliveryAbove ?? 3000)
+        }
+      } catch (err) {
+        console.log('Settings fetch error:', err)
       }
-    } catch (err) {
-      console.log(err)
     }
+    fetchSettings()
+  }, [])
+
+  /* ── Get applied delivery fee based on cart subtotal ── */
+  const getDeliveryFee = (subtotal) => {
+    if (subtotal === 0) return 0
+    return subtotal >= freeDeliveryAbove ? 0 : deliveryFee
   }
-  fetchSiteSettings()
-}, [])
 
-// Add to context value
-
-  /* ================= LOGOUT ================= */
-
+  /* ── Logout ── */
   const logoutUser = () => {
-    localStorage.removeItem("token");
-    settoken("");
-    setcartitems({});
-    setWishlist([]);
-    setUserProfile(null);
-  };
+    localStorage.removeItem("token")
+    settoken("")
+    setcartitems({})
+    setWishlist([])
+    setUserProfile(null)
+  }
 
-  /* ================= TOKEN VERIFY ================= */
-
+  /* ── Verify token ── */
   const verifyToken = async () => {
     try {
       const res = await axios.post(
-        backendurl + "/api/user/profile",
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
+        backendurl + "/api/user/profile", {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       if (res.data.success) {
-        setUserProfile(res.data.user);
+        setUserProfile(res.data.user)
       } else {
-        logoutUser();
+        logoutUser()
       }
-    } catch (error) {
-      logoutUser();
+    } catch {
+      logoutUser()
     }
-  };
+  }
 
-  /* ================= PRODUCTS ================= */
-
+  /* ── Products ── */
   const getproductdata = async () => {
     try {
-      const response = await axios.get(
-        backendurl + "/api/product/list"
-      );
-
+      const response = await axios.post(backendurl + "/api/product/list")
       if (response.data.success) {
-        setproducts(response.data.products);
+        setproducts(response.data.products)
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message)
     }
-  };
+  }
 
-  useEffect(() => {
-    getproductdata();
-  }, []);
+  useEffect(() => { getproductdata() }, [])
 
-  /* ================= CART ================= */
-
+  /* ── Cart ── */
   const getusercart = async () => {
     try {
       const response = await axios.post(
-        backendurl + "/api/cart/get",
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
+        backendurl + "/api/cart/get", {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       if (response.data.success) {
-        setcartitems(response.data.cartdata);
+        setcartitems(response.data.cartdata)
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message)
     }
-  };
+  }
 
-  const addtocart = async (itemid, size) => {
-    if (!token) {
-      toast.error("Please Login First");
-      navigate("/login");
-      return;
-    }
+ const addtocart = async (itemid, size) => {
+  if (!token) {
+    toast.error("Please Login First")
+    navigate("/login")
+    return
+  }
 
-    const product = products.find(p => p._id === itemid);
-    const hasSizes = product?.sizes?.length > 0;
+  const product  = products.find(p => p._id === itemid)
+  const hasSizes = product?.sizes?.length > 0
 
-    if (hasSizes && !size) {
-      toast.error("Please Select Size First");
-      return;
-    }
+  if (hasSizes && !size) {
+    toast.error("Please Select Size First")
+    return
+  }
 
-    const sizeKey = size || "default";
-    let cartdata = structuredClone(cartitems);
+  const sizeKey = size || "default"
+  let cartdata  = structuredClone(cartitems)
+  if (!cartdata[itemid]) cartdata[itemid] = {}
+  cartdata[itemid][sizeKey] = (cartdata[itemid][sizeKey] || 0) + 1
+  setcartitems(cartdata)   // ← always was needed here too
 
-    if (!cartdata[itemid]) cartdata[itemid] = {};
-    cartdata[itemid][sizeKey] =
-      (cartdata[itemid][sizeKey] || 0) + 1;
+  try {
+    await axios.post(
+      backendurl + "/api/cart/add",
+      { itemid, size: sizeKey },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+  } catch (error) {
+    toast.error(error.message)
+  }
+}
 
-    setcartitems(cartdata);
 
-    try {
-      await axios.post(
-        backendurl + "/api/cart/add",
-        { itemid, size: sizeKey },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
+
+
+
 
   const updatequantity = async (itemid, size, quantity) => {
-    let cartdata = structuredClone(cartitems);
-    cartdata[itemid][size] = quantity;
-    setcartitems(cartdata);
-
+    let cartdata = structuredClone(cartitems)
+    cartdata[itemid][size] = quantity
+    setcartitems(cartdata)
     try {
       await axios.post(
         backendurl + "/api/cart/update",
         { itemid, size, quantity },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message)
     }
-  };
+  }
 
   const getcartcount = () => {
-    let total = 0;
+    let total = 0
     for (const item in cartitems) {
       for (const size in cartitems[item]) {
-        total += cartitems[item][size];
+        // if (size === "__image") continue 
+        total += cartitems[item][size]
       }
     }
-    return total;
-  };
+    return total
+  }
 
+  // ── Fixed: uses sale price if product is on sale ──
   const getcartamount = () => {
-    let total = 0;
-
-    for (const item in cartitems) {
-      const product = products.find(p => p._id === item);
-
-      for (const size in cartitems[item]) {
-        total += product.price * cartitems[item][size];
+    let total = 0
+    for (const itemId in cartitems) {
+      const product = products.find(p => p._id === itemId)
+      if (!product) continue
+      // Use sale price if on sale, otherwise original price
+      const price = product.onSale && product.salePrice > 0
+        ? product.salePrice
+        : product.price
+      for (const size in cartitems[itemId]) {
+        if (cartitems[itemId][size] > 0) {
+          total += price * cartitems[itemId][size]
+        }
       }
     }
+    return total
+  }
 
-    return total;
-  };
-
-  /* ================= WISHLIST ================= */
-
+  /* ── Wishlist ── */
   const fetchWishlist = async () => {
     try {
       const res = await axios.post(
-        backendurl + "/api/wishlist/toggle",
-        {},
+        backendurl + "/api/wishlist/toggle", {},
         { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (res.data.success) {
-        setWishlist(res.data.wishlist);
-      }
+      )
+      if (res.data.success) setWishlist(res.data.wishlist)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
-  /* ================= PROFILE UPDATE ================= */
-
+  /* ── Profile ── */
   const updateUserProfile = async (formData) => {
     try {
       const response = await axios.post(
@@ -496,38 +781,37 @@ useEffect(() => {
             "Content-Type": "multipart/form-data",
           },
         }
-      );
-
+      )
       if (response.data.success) {
-        setUserProfile(response.data.user);
-        toast.success("Profile updated successfully");
+        setUserProfile(response.data.user)
+        toast.success("Profile updated successfully")
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message)
     }
-  };
+  }
 
-  /* ================= AUTH EFFECT ================= */
-
+  /* ── Auth effect ── */
   useEffect(() => {
     if (token) {
-      verifyToken();
-      getusercart();
-      fetchWishlist();
+      verifyToken()
+      getusercart()
+      fetchWishlist()
     }
-  }, [token]);
+  }, [token])
 
-  /* ================= CONTEXT VALUE ================= */
-
+  /* ── Context value ── */
   const value = {
     products,
     currency,
-    delievery_fee,
 
-    search,
-    setsearch,
-    showsearch,
-    setshowsearch,
+    // ── Delivery — from DB, not hardcoded ──
+    deliveryFee,
+    freeDeliveryAbove,
+    getDeliveryFee,       // call getDeliveryFee(subtotal) to get applied fee
+
+    search, setsearch,
+    showsearch, setshowsearch,
 
     cartitems,
     addtocart,
@@ -536,27 +820,23 @@ useEffect(() => {
     getcartamount,
     setcartitems,
 
-    wishlist,
-    setWishlist,
-
-    token,
-    settoken,
+    wishlist, setWishlist,
+    token, settoken,
     logoutUser,
 
-    userProfile,
-    setUserProfile,
+    userProfile, setUserProfile,
     updateUserProfile,
 
     backendurl,
     navigate,
     siteSettings,
-  };
+  }
 
   return (
     <ShopContext.Provider value={value}>
       {props.children}
     </ShopContext.Provider>
-  );
-};
+  )
+}
 
-export default ShopContextProvider;
+export default ShopContextProvider

@@ -86,7 +86,7 @@ const [list,setlist]=useState([]);
 
 const fetchlist= async ()=>{
   try{
-    const response= await axios.get(backendurl +'/api/product/list');
+    const response= await axios.post(backendurl +'/api/product/list');
     if(response.data.success){
       setlist(response.data.products)
     }

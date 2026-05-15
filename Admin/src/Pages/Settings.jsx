@@ -3,7 +3,7 @@ import axios from 'axios'
 import { backendurl } from '../App'
 import { toast } from 'react-toastify'
 
-const TABS = ['Branding', 'Password', 'Payment Methods']
+const TABS = ['Branding', 'Password', 'Payment Methods', 'Delivery']
 
 // ── Reusable input styles ──
 const inputClass = "w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-[#1a1a2e] outline-none focus:border-[#e8a87c] bg-white transition-colors"
@@ -14,6 +14,10 @@ const Settings = ({ token }) => {
   const [adminRole, setAdminRole]     = useState('')
   const [adminId, setAdminId]         = useState('')
 
+ // ── Delivery state ──
+  const [deliveryFee, setDeliveryFee] = useState('')
+  const [freeDeliveryAbove, setFreeDeliveryAbove] = useState('')
+  const [deliverySaving, setDeliverySaving] = useState(false)
   // ── Branding state ──
   const [storeName, setStoreName]     = useState('')
   const [tagline, setTagline]         = useState('')
@@ -62,6 +66,9 @@ const Settings = ({ token }) => {
         setTagline(data.settings.tagline || '')
         setCurrentLogo(data.settings.logo || '')
         setPayments(data.settings.payments || { cod: true, stripe: true })
+// Set Delivery Data
+        setDeliveryFee(data.settings.deliveryFee ?? 200)
+        setFreeDeliveryAbove(data.settings.freeDeliveryAbove ?? 3000)
       }
     } catch (err) {
       console.log(err)
@@ -90,6 +97,18 @@ const Settings = ({ token }) => {
     } catch (err) {
       console.log(err)
     }
+  }
+const handleDeliverySave = async (e) => {
+    e.preventDefault()
+    if (!deliveryFee || !freeDeliveryAbove) return toast.error('All fields required')
+    setDeliverySaving(true)
+    try {
+      const { data } = await axios.post(backendurl + '/api/settings/delivery', 
+        { deliveryFee, freeDeliveryAbove }, { headers: { token } })
+      if (data.success) toast.success('Delivery settings updated')
+      else toast.error(data.message)
+    } catch (err) { toast.error('Failed to save delivery settings') }
+    finally { setDeliverySaving(false) }
   }
 
   // ── Save branding ──
@@ -647,6 +666,25 @@ const Settings = ({ token }) => {
                 </div>
               )}
             </div>
+          )}
+  {/* DELIVERY TAB */}
+          {activeTab === 'Delivery' && (
+            <form onSubmit={handleDeliverySave} className="space-y-5 max-w-lg">
+              <div>
+                <label className={labelClass}>Default Delivery Fee (Rs)</label>
+                <input type="number" value={deliveryFee} onChange={e => setDeliveryFee(e.target.value)} className={inputClass} placeholder="200" />
+              </div>
+              <div>
+                <label className={labelClass}>Free Delivery Threshold (Rs)</label>
+                <input type="number" value={freeDeliveryAbove} onChange={e => setFreeDeliveryAbove(e.target.value)} className={inputClass} placeholder="3000" />
+              </div>
+              <div className="bg-[#fff4e5] rounded-lg px-4 py-3 text-xs text-[#b36b00]">
+                Orders under <strong>Rs {Number(freeDeliveryAbove).toLocaleString()}</strong> will be charged <strong>Rs {Number(deliveryFee).toLocaleString()}</strong>.
+              </div>
+              <button type="submit" disabled={deliverySaving} className="bg-[#1a1a2e] text-white text-xs font-medium px-5 py-2.5 rounded-lg disabled:opacity-50">
+                {deliverySaving ? 'Updating...' : 'Save Delivery Settings'}
+              </button>
+            </form>
           )}
 
         </div>

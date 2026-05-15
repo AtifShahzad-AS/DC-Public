@@ -188,14 +188,16 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 const Place_order = () => {
-  const [method, setmethod] = useState('cod')
+  const [method, setmethod]                   = useState('cod')
   const [enabledPayments, setEnabledPayments] = useState({ cod: true, stripe: true })
   const [loadingSettings, setLoadingSettings] = useState(true)
-  const [placing, setPlacing] = useState(false)
+  const [placing, setPlacing]                 = useState(false)
 
   const {
-    navigate, backendurl, token, cartitems,
-    setcartitems, getcartamount, delievery_fee, products
+    navigate, backendurl, token,
+    cartitems, setcartitems,
+    getcartamount, getDeliveryFee,   // ← from context, not hardcoded
+    products
   } = useContext(ShopContext)
 
   const [formdata, setformdata] = useState({
@@ -204,7 +206,7 @@ const Place_order = () => {
     country: "", zipcode: "", phone: ""
   })
 
-  // ── Build order items — check cart is not empty ──
+  // ── Build order items ──
   const buildOrderItems = () => {
     let orderitems = []
     for (const items in cartitems) {
@@ -212,10 +214,14 @@ const Place_order = () => {
         if (cartitems[items][item] > 0) {
           const product = products.find(p => p._id === items)
           if (product) {
+            // Use sale price if on sale
+            const price = product.onSale && product.salePrice > 0
+              ? product.salePrice
+              : product.price
             orderitems.push({
               productId: product._id,
               name:      product.name,
-              price:     product.price,
+              price,                    // ← correct price (sale or regular)
               image:     product.image,
               category:  product.category,
               size:      item,
@@ -236,12 +242,8 @@ const Place_order = () => {
         if (data.success) {
           const payments = data.settings.payments
           setEnabledPayments(payments)
-          // Auto-select first available method
-          if (!payments.cod && payments.stripe) {
-            setmethod('stripe')
-          } else if (payments.cod) {
-            setmethod('cod')
-          }
+          if (!payments.cod && payments.stripe) setmethod('stripe')
+          else if (payments.cod) setmethod('cod')
         }
       } catch (err) {
         console.log(err)
@@ -260,15 +262,12 @@ const Place_order = () => {
   const onsubmit = async (event) => {
     event.preventDefault()
 
-    // ── Guard: empty cart ──
     const orderitems = buildOrderItems()
     if (orderitems.length === 0) {
       toast.error("Your cart is empty")
       navigate('/cart')
       return
     }
-
-    // ── Guard: no token ──
     if (!token) {
       toast.error("Please login to place an order")
       navigate('/login')
@@ -277,16 +276,20 @@ const Place_order = () => {
 
     setPlacing(true)
 
+    // ── Calculate amount using context getDeliveryFee ──
+    const subtotal = getcartamount()
+    const fee      = getDeliveryFee(subtotal)    // 0 if free delivery applies
+    const amount   = subtotal + fee
+
     const orderdata = {
       address: formdata,
       items:   orderitems,
-      amount:  getcartamount() + delievery_fee
+      amount                                     // correct total
     }
 
     try {
       switch (method) {
 
-        // ── COD ──
         case "cod": {
           const response = await axios.post(
             backendurl + '/api/order/place',
@@ -302,7 +305,6 @@ const Place_order = () => {
           break
         }
 
-        // ── Stripe ──
         case "stripe": {
           const responsestripe = await axios.post(
             backendurl + '/api/order/stripe',
@@ -310,8 +312,6 @@ const Place_order = () => {
             { headers: { Authorization: `Bearer ${token}` } }
           )
           if (responsestripe.data.success) {
-            // ── Do NOT clear cart here ──
-            // Cart is cleared only after payment verified in verifystripe
             const { session_url } = responsestripe.data
             window.location.replace(session_url)
           } else {
@@ -334,8 +334,7 @@ const Place_order = () => {
   const inputClass = "border border-gray-300 px-3 py-3.5 w-full rounded-lg text-sm outline-none focus:border-blue-400 transition-colors"
 
   return (
-    <form onSubmit={onsubmit}
-      className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] mt-20'>
+    <form onSubmit={onsubmit} className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] mt-20'>
       <div className='flex flex-col sm:flex-row justify-between gap-8 pt-5 sm:pt-14 min-h-[80vh] border-t'>
 
         {/* ── Left — Delivery Info ── */}
@@ -343,7 +342,6 @@ const Place_order = () => {
           <div className='text-xl sm:text-2xl my-3'>
             <Title text1={'Delivery'} text2={"Information"} />
           </div>
-
           <div className='flex gap-3'>
             <input required onChange={onchange} name="firstname" value={formdata.firstname}
               className={inputClass} type="text" placeholder='First Name' />
@@ -381,7 +379,6 @@ const Place_order = () => {
               <Title text1={"Payment"} text2={"Method"} />
             </div>
 
-            {/* Payment methods */}
             {loadingSettings ? (
               <div className="flex items-center gap-2 py-4">
                 <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
@@ -390,44 +387,30 @@ const Place_order = () => {
             ) : (
               <div className='flex flex-col sm:flex-row gap-3'>
 
-                {/* Stripe */}
                 {enabledPayments.stripe && (
                   <div
                     onClick={() => setmethod("stripe")}
-                    className={`flex items-center gap-3 border-2 p-3 px-4 cursor-pointer rounded-xl
-                      transition-all duration-200
-                      ${method === "stripe"
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                    className={`flex items-center gap-3 border-2 p-3 px-4 cursor-pointer rounded-xl transition-all duration-200
+                      ${method === "stripe" ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}
                   >
                     <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 transition-colors
                       ${method === "stripe" ? 'border-blue-500 bg-blue-500' : 'border-gray-300'}`}>
-                      {method === "stripe" && (
-                        <div className="w-full h-full rounded-full bg-white scale-50" />
-                      )}
+                      {method === "stripe" && <div className="w-full h-full rounded-full bg-white scale-50" />}
                     </div>
                     <img className='h-5 w-[50px] object-contain' src={assets.stripe} alt="Stripe" />
                     <span className="text-xs text-gray-600 font-medium">Card Payment</span>
                   </div>
                 )}
 
-                {/* COD */}
                 {enabledPayments.cod && (
                   <div
                     onClick={() => setmethod("cod")}
-                    className={`flex items-center gap-3 border-2 p-3 px-4 cursor-pointer rounded-xl
-                      transition-all duration-200
-                      ${method === "cod"
-                        ? 'border-green-500 bg-green-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                    className={`flex items-center gap-3 border-2 p-3 px-4 cursor-pointer rounded-xl transition-all duration-200
+                      ${method === "cod" ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'}`}
                   >
                     <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 transition-colors
                       ${method === "cod" ? 'border-green-500 bg-green-500' : 'border-gray-300'}`}>
-                      {method === "cod" && (
-                        <div className="w-full h-full rounded-full bg-white scale-50" />
-                      )}
+                      {method === "cod" && <div className="w-full h-full rounded-full bg-white scale-50" />}
                     </div>
                     <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                       <rect x="2" y="6" width="20" height="12" rx="2"/>
@@ -437,7 +420,6 @@ const Place_order = () => {
                   </div>
                 )}
 
-                {/* No methods available */}
                 {!enabledPayments.cod && !enabledPayments.stripe && (
                   <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
                     No payment methods are currently available. Please contact support.
@@ -446,17 +428,11 @@ const Place_order = () => {
               </div>
             )}
 
-            {/* Place Order button */}
             <div className='w-full text-end mt-8'>
               <button
                 type='submit'
-                disabled={
-                  placing ||
-                  loadingSettings ||
-                  (!enabledPayments.cod && !enabledPayments.stripe)
-                }
-                className={`px-16 py-4 rounded-xl text-white font-semibold text-sm
-                  transition-all duration-200
+                disabled={placing || loadingSettings || (!enabledPayments.cod && !enabledPayments.stripe)}
+                className={`px-16 py-4 rounded-xl text-white font-semibold text-sm transition-all duration-200
                   ${placing || loadingSettings || (!enabledPayments.cod && !enabledPayments.stripe)
                     ? 'bg-slate-300 cursor-not-allowed'
                     : 'bg-blue-600 hover:bg-blue-700 cursor-pointer active:scale-95'

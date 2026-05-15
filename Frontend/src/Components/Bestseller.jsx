@@ -12,19 +12,20 @@ const Bestseller = () => {
    const bestproduct= products.filter((item)=>{
    return item.bestseller 
    });
-   setbestseller(bestproduct.slice(0,4))
+   
+   setbestseller(bestproduct.slice(0,8))
 
     },[products])
   return (
      <div className='my-10'>
         <div className='text-center py-8 text-3xl'>
             <Title text1={'Best '} text2={'Seller'}/>
-            <p className='w-3/4 text-center m-auto text-xs sm:text-sm md:text-base'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, perspiciatis?</p>
+            <p className='w-3/4 text-center m-auto text-xs sm:text-sm md:text-base'>Discover our most-loved and top-rated products that customers choose time and time again.</p>
         </div>
       {/* rendring product */}
       <div className='grid gap-2 grid-cols-2  sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 lg:gap-6 gap-y-6'>
         { bestseller.map((item,index)=>(
-          <Productitems key={index} id={item._id} image={Array.isArray(item.image) ? item.image[0] : item.image } name={item.name} price={item.price} rating={item.rating || 0}
+          <Productitems key={index} id={item._id} stock={item.stock} image={Array.isArray(item.image) ? item.image[0] : item.image } name={item.name} price={item.price} rating={item.rating || 0}
 reviewCount={item.reviewCount || 0} />
         ))}
       </div>

@@ -11,7 +11,7 @@ const Title = ({text1,text2}) => {
  <div className='inline-flex gap-2 items-center mb-3'>
       <p className="text-gray-700 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-medium leading-snug text-center sm:text-left">
   {text1}
-  <span className="text-blue-600 font-semibold ml-1">
+  <span className="text-blue-600 font-semibold ml-1 font-serif">
     {text2}
   </span>
 </p>

@@ -12,6 +12,9 @@ import Categories from './Pages/Categories'
 import Reviews from './Pages/Reviews'
 import Banners from './Pages/Banners'
 import Inventory from './Pages/Inventory'
+import AdminContacts from "./Pages/AdminContacts"
+
+// inside your routes
 
 import Login from './Components/Login'
 import { ToastContainer } from 'react-toastify'
@@ -54,6 +57,8 @@ const App = () => {
                 <Route path='/admins' element={<AdminManagement token={token} />} />
                  <Route path='/inventory' element={<Inventory token={token} />} />
                  <Route path='/settings' element={<Settings token={token} />} />
+                <Route path="/contacts" element={<AdminContacts token={token} />} />
+
                 
               </Routes>
             </main>

@@ -1,6 +1,8 @@
 import express        from "express"
 import multer         from "multer"
 import adminauth, { superadminonly } from "../middleware/adminauth.js"
+import { updateDelivery } from '../controllers/settingsController.js'
+
 import {
   getSettings,
   updateBranding,
@@ -18,6 +20,10 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage })
 
+// settingsRoute.js
+
+// Add this line with your other routes
+settingsrouter.post('/delivery', adminauth, updateDelivery)
 // Public — frontend needs logo/name
 settingsrouter.post("/get",              getSettings)
 

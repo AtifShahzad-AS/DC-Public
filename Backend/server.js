@@ -20,6 +20,7 @@ import reviewrouter from "./routes/reviewRoute.js"
 import settingsrouter from "./routes/settingsRoute.js"
 import bannerrouter from "./routes/bannerRoute.js"
 import contactRoute from "./routes/contactRoute.js";
+import categoryRouter from "./routes/categoryRoute.js"
 
 
 // appconfig
@@ -36,6 +37,7 @@ app.use("/uploads", express.static("uploads"));
 
 
 app.use(cors())
+
 //api endpoints
 app.use('/api/user',userrouter);
 app.use('/api/product',productrouter)
@@ -51,16 +53,13 @@ app.use("/api/review", reviewrouter)
 app.use("/api/settings", settingsrouter)
 app.use("/api/banner", bannerrouter)
 app.use("/api/contact", contactRoute);
-// TEMPORARY — remove after running once
-// app.post('/api/migrate-stock', async (req, res) => {
-//   const result = await productmodel.updateMany(
-//     { stock: { $exists: false } },
-//     { $set: { stock: 0, lowStockAlert: 10, alertSent: false } }
-//   )
-//   res.json({ success: true, updated: result.modifiedCount })
-// })
+app.use("/api/category", categoryRouter)
+
 app.get('/',(req,res)=>{
     res.send('api working')
 })
 
-app.listen(port,()=>console.log('server started on port:'+ port))
+// app.listen(port,()=>console.log('server started on port:'+ port))
+app.listen(port, "0.0.0.0", () => {
+  console.log("Server started on port:", port);
+});

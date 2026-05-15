@@ -432,6 +432,8 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { backendurl, currency } from '../App'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+
 
 const StatCard = ({ icon, iconBg, iconColor, value, label, change, changeType }) => (
   <div className="bg-white rounded-xl p-4 border border-black/5">
@@ -456,14 +458,16 @@ const StatCard = ({ icon, iconBg, iconColor, value, label, change, changeType })
 const Dashboard = ({ token }) => {
   const navigate = useNavigate()
 
-  const [stats, setStats]             = useState({ revenue: 0, orders: 0 })
+  const [stats, setStats]             = useState({ revenue: 0,customers:0 ,orders: 0 })
   const [recentOrders, setRecentOrders] = useState([])
+  const [customers, setCustomers]     = useState([])
   const [lowStockProducts, setLowStockProducts] = useState([])
   const [categoryData, setCategoryData] = useState([])
   const [inventoryStats, setInventoryStats]     = useState({
     total: 0, lowStock: 0, outOfStock: 0, healthy: 0
   })
   const [loadingOrders, setLoadingOrders]   = useState(true)
+  const [loading, setLoading]   = useState(true)
   const [loadingStock, setLoadingStock]     = useState(true)
 
   // ── Analytics ──
@@ -473,23 +477,73 @@ const Dashboard = ({ token }) => {
   const [loadingAnalytics, setLoadingAnalytics] = useState(true)
   const [chartView, setChartView]               = useState('revenue')
 
-  // ── Fetch orders ──
-  const fetchOrders = async () => {
+  const fetchCustomers = async () => {
+    try {
+      setLoading(true)
+     const { data } = await axios.post(
+  backendurl + '/api/customer/list',
+  {},
+  { headers: { token } }
+)
+      if (data.success) {
+        setCustomers(data.customers)
+        setStats(prev => ({
+        ...prev,
+        customers: data.customers.length,   
+      }))
+      } else {
+        toast.error(data.message)
+      }
+    } catch (err) {
+      toast.error('Failed to load customers')
+      console.log(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+
+ // ── Fetch inventory stats ──
+  const fetchInventoryStats = async () => {
     if (!token) return
     try {
-      setLoadingOrders(true)
       const { data } = await axios.post(
-        backendurl + '/api/order/list', {},
+        backendurl + '/api/inventory/list', {},
         { headers: { token } }
       )
-      if (data.success) {
-        setRecentOrders(data.orders.slice(0, 5))
-        const revenue = data.orders.reduce((sum, o) => sum + (o.amount || 0), 0)
-        setStats(prev => ({ ...prev, orders: data.orders.length, revenue }))
-      }
+      if (data.success) setInventoryStats(data.stats || {})
     } catch (err) { console.log(err) }
-    finally { setLoadingOrders(false) }
   }
+ 
+
+  // ── Fetch orders ──
+ 
+
+const fetchOrders = async () => {
+  if (!token) return
+  try {
+    setLoadingOrders(true)
+    const { data } = await axios.post(
+      backendurl + '/api/order/list', {},
+      { headers: { token } }
+    )
+    if (data.success) {
+      setRecentOrders(data.orders.slice(0, 5))
+
+      // ── Only count paid + non-cancelled orders for revenue ──
+      const validOrders = data.orders.filter(
+  o => (o.payment === true || o.status === 'delievered') && o.status !== 'Cancelled'
+)
+const revenue = validOrders.reduce((sum, o) => sum + (o.amount || 0), 0)
+      setStats(prev => ({
+        ...prev,
+        orders: data.orders.length,   // total order count (all statuses)
+        revenue                        // only from paid, non-cancelled
+      }))
+    }
+  } catch (err) { console.log(err) }
+  finally { setLoadingOrders(false) }
+}
 
   // ── Fetch analytics ──
   const fetchAnalytics = async () => {
@@ -524,19 +578,10 @@ const Dashboard = ({ token }) => {
     finally { setLoadingStock(false) }
   }
 
-  // ── Fetch inventory stats ──
-  const fetchInventoryStats = async () => {
-    if (!token) return
-    try {
-      const { data } = await axios.post(
-        backendurl + '/api/inventory/list', {},
-        { headers: { token } }
-      )
-      if (data.success) setInventoryStats(data.stats || {})
-    } catch (err) { console.log(err) }
-  }
+  
 
   useEffect(() => {
+    fetchCustomers()
     fetchOrders()
     fetchAnalytics()
     fetchLowStock()
@@ -576,27 +621,27 @@ const Dashboard = ({ token }) => {
           changeType="up"
         />
         <StatCard
+          iconBg="#e8f0fe" iconColor="#1a4fa8"
+          icon={<><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+            <rect x="9" y="3" width="6" height="4" rx="1"/></>}
+          value={stats.customers.toLocaleString()}
+          label="Total customers"
+          change="Live from all customers"
+          changeType="up"
+        />
+        
+        <StatCard
           iconBg="#e6f7ee" iconColor="#1a7a45"
           icon={<><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/>
             <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></>}
-          value={inventoryStats.healthy || 0}
-          label="Products In Stock"
-          change={`${inventoryStats.total || 0} total products`}
+          // value={inventoryStats.healthy || 0}
+          value={inventoryStats.total || 0}
+          label=" Total Products"
+          change={`${inventoryStats.healthy || 0} Products in Stock`}
           changeType="up"
         />
-        <StatCard
-          iconBg="#fce8e8" iconColor="#a82222"
-          icon={<><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-            <line x1="12" y1="9" x2="12" y2="13"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/></>}
-          value={(inventoryStats.outOfStock || 0) + (inventoryStats.lowStock || 0)}
-          label="Stock Alerts"
-          change={inventoryStats.outOfStock > 0
-            ? `${inventoryStats.outOfStock} out of stock`
-            : `${inventoryStats.lowStock || 0} running low`
-          }
-          changeType={inventoryStats.outOfStock > 0 ? 'down' : 'warn'}
-        />
+        
+     
       </div>
 
       {/* ── Inventory Alert Banner ── */}
@@ -881,37 +926,42 @@ const Dashboard = ({ token }) => {
       </div>
 
       {/* ── Order Status Breakdown ── */}
+     
       {!loadingAnalytics && Object.keys(statusBreakdown).length > 0 && (
-        <div className="bg-white rounded-xl p-5 border border-black/5">
-          <h2 className="text-sm font-semibold text-[#1a1a2e] mb-4">
-            Order Status Breakdown
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {[
-              { key: 'Order Placed',      color: '#1a4fa8', bg: '#e8f0fe', label: 'Placed'      },
-              { key: 'Packing',           color: '#b36b00', bg: '#fff4e5', label: 'Packing'     },
-              { key: 'Shiped',            color: '#7c3aed', bg: '#f0eafd', label: 'Shipped'     },
-              { key: 'Out for delievery', color: '#c05621', bg: '#fff0e5', label: 'Out for Del' },
-              { key: 'delievered',        color: '#1a7a45', bg: '#e6f7ee', label: 'Delivered'   },
-              { key: 'Cancelled',         color: '#a82222', bg: '#fce8e8', label: 'Cancelled'   },
-            ].map(s => (
-              <div key={s.key}
-                className="flex flex-col items-center p-3 rounded-xl border border-gray-50"
-                style={{ background: s.bg }}>
-                <span className="text-xl font-bold" style={{ color: s.color }}>
-                  {statusBreakdown[s.key] || 0}
-                </span>
-                <span className="text-[10px] text-gray-500 mt-0.5 text-center">
-                  {s.label}
-                </span>
-              </div>
-            ))}
-          </div>
+  <div className="bg-white rounded-xl p-5 border border-black/5">
+    <div className="flex items-center justify-between mb-4">
+      <h2 className="text-sm font-semibold text-[#1a1a2e]">Order Status Breakdown</h2>
+      <span className="text-xs text-gray-400">
+        Total: {Object.values(statusBreakdown).reduce((s, v) => s + v, 0)} orders
+      </span>
+    </div>
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      {[
+        { key: 'Order Placed',      color: '#1a4fa8', bg: '#e8f0fe', label: 'Placed'      },
+        { key: 'Packing',           color: '#b36b00', bg: '#fff4e5', label: 'Packing'     },
+        { key: 'Shiped',            color: '#7c3aed', bg: '#f0eafd', label: 'Shipped'     },
+        { key: 'Out for delievery', color: '#c05621', bg: '#fff0e5', label: 'Out for Del' },
+        { key: 'delievered',        color: '#1a7a45', bg: '#e6f7ee', label: 'Delivered'   },
+        { key: 'Cancelled',         color: '#a82222', bg: '#fce8e8', label: 'Cancelled'   },
+      ].map(s => (
+        <div key={s.key}
+          className="flex flex-col items-center p-3 rounded-xl border border-gray-50"
+          style={{ background: s.bg }}>
+          <span className="text-xl font-bold" style={{ color: s.color }}>
+            {statusBreakdown[s.key] || 0}
+          </span>
+          <span className="text-[10px] text-gray-500 mt-0.5 text-center">
+            {s.label}
+          </span>
         </div>
-      )}
+      ))}
+    </div>
+  </div>
+)}
+      
 
       {/* ── Recent Orders ── */}
-      <div className="bg-white rounded-xl border border-black/5 overflow-hidden">
+      {/* <div className="bg-white rounded-xl border border-black/5 overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-[#1a1a2e]">Recent Orders</h2>
           <button onClick={() => navigate('/orders')}
@@ -987,7 +1037,7 @@ const Dashboard = ({ token }) => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
 
       {/* ── Activity + Low Stock ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-2">

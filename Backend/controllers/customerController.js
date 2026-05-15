@@ -8,7 +8,7 @@ export const getAllCustomers = async (req, res) => {
       .select("-password -cartdata")
       .sort({ _id: -1 })
 
-    res.json({ success: true, customers })
+    res.json({ success: true, customers,stats:{total:customers} })
   } catch (error) {
     console.log(error)
     res.json({ success: false, message: error.message })
