@@ -36,8 +36,8 @@ const categories = [
 const team = [
   {
     name: "Muhammad Aqeel",
-    role: "Founder & CEO",
-    image: "/IMG_530.HEIC",
+    role: "Security Analyst",
+    image: "/aqe.jpeg",
     social: { fb: "#", ig: "#", li: "#" }
   },
   {
@@ -49,15 +49,15 @@ const team = [
   {
     name: "Abdullah Moufeeq",
     role: "UI/UX Designer",
-    image: "/images/team3.jpg",
+    image: "/Abd.jpeg",
     social: { fb: "#", ig: "#", li: "#" }
   },
-  {
-    name: "Karina Kapor",
-    role: "Marketing Head",
-    image: "/karina.jpg",
-    social: { fb: "#", ig: "#", li: "#" }
-  }
+  // {
+  //   name: "Karina Kapor",
+  //   role: "Marketing Head",
+  //   image: "/karina.jpg",
+  //   social: { fb: "#", ig: "#", li: "#" }
+  // }
 ]
 
 const testimonials = [
@@ -265,13 +265,13 @@ export default function AboutUs() {
         </section>
 
         {/* OUR COLLECTION */}
-        <section>
+        {/* <section>
           <div className="text-center mb-6 sm:mb-8">
             <p className="text-xs sm:text-base font-bold tracking-widest uppercase text-blue-600 mb-2">Our Collection</p>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Everything for your home</h2>
           </div>
           {/* 1 col xs, 2 col sm, 3 col md */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
             {categories.map((c) => (
               <div
                 key={c.name}
@@ -282,8 +282,8 @@ export default function AboutUs() {
                 <p className="text-xs text-gray-500 leading-relaxed">{c.desc}</p>
               </div>
             ))}
-          </div>
-        </section>
+          </div> */}
+        {/* </section> */} 
 
         {/* LEADERSHIP / TEAM */}
         <section>
@@ -298,7 +298,7 @@ export default function AboutUs() {
           </div>
 
           {/* 1 col xs, 2 col sm, 4 col lg */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
             {team.map((member) => (
               <div
                 key={member.name}
