@@ -37,12 +37,12 @@ const team = [
   {
     name: "Muhammad Aqeel",
     role: "Security Analyst",
-    image: "/aqe.jpeg",
+    image: "/aqeeel.jpeg",
     social: { fb: "#", ig: "#", li: "#" }
   },
   {
     name: "Atif Shahzad",
-    role: "Founder & CEO",
+    role: "Manager & Developer",
     image: "/CEO.jpeg",
     social: { fb: "#", ig: "#", li: "#" }
   },
